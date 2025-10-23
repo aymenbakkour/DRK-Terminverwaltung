@@ -86,9 +86,10 @@
     }
     .logo{
       width:64px;height:64px;border-radius:12px;
-      background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      background: linear-gradient(135deg,var(--accent),var(--accent-2)); /* Kept the background gradient */
       display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;
       box-shadow: 0 8px 24px rgba(7,89,133,0.12), inset 0 -6px 18px rgba(255,255,255,0.06);
+      /* Ensure SVG or image fits within this container */
     }
     .title{
       display:flex;flex-direction:column;
@@ -108,7 +109,7 @@
       transition:all var(--transition);
       font-weight:600;
       font-size:14px;
-      text-decoration: none; /* Ensure buttons don't have text decoration */
+      text-decoration: none; 
     }
     .btn-ghost{
       background:transparent;border:1px solid rgba(15,23,42,0.06);color:#07142a;
@@ -132,11 +133,11 @@
         color: #fff; 
     }
     
-    /* Notes specific styles */
+    /* UPDATED: Notes specific styles (Yellow/Gelb) */
     .btn-notes-new {
-        background: linear-gradient(90deg, #1d9e79, #10b981); 
-        color: #fff; 
-        box-shadow: 0 8px 20px rgba(29, 158, 121, 0.2); 
+        background: linear-gradient(90deg, #fcd34d, #f59e0b); 
+        color: #1f2937; /* Dark text for contrast */
+        box-shadow: 0 8px 20px rgba(253, 211, 77, 0.4); 
     }
     .note-card {
         background: #fffbe6; 
@@ -152,7 +153,7 @@
         margin-top: 0;
         margin-bottom: 0;
         color: #92400e; 
-        font-size: 14px; /* SMALLER HEADING */
+        font-size: 14px; 
     }
     .note-card p {
         margin: 8px 0 0 0;
@@ -162,7 +163,7 @@
         padding-top: 8px;
         white-space: pre-wrap;
     }
-    .note-actions { /* NEW: Style for action buttons in note card */
+    .note-actions { 
         display: flex;
         justify-content: flex-end;
         gap: 8px;
@@ -190,15 +191,14 @@
         height: 38px;
     }
     
-    /* NEW LOCATION/SINGLE CARD STYLE */
     .today{
       display:flex;
       gap:12px;
       align-items:flex-start;
-      margin-bottom:18px; /* New location under stats */
+      margin-bottom:18px; 
     }
     .today .today-card{
-      flex:1; /* Takes full width as it is the only card */
+      flex:1; 
       background:linear-gradient(180deg, rgba(0,120,212,0.06), rgba(255,255,255,0.6));
       padding:14px;
       border-radius:12px;
@@ -402,7 +402,22 @@
   <div id="loginScreen">
     <div id="loginCard">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
+        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">
+           <svg fill="#ffffff" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="display: block;">
+            <path fill="#ffffff" d="M384 256H128v-64h256v64zm0 64H128v-64h256v64z"/>
+            <path fill="#ffffff" d="M320 192H192v128h128V192zm-64 64h64v64H256v-64z"/>
+            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
+            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+            <rect fill="#b91c1c" width="512" height="512" rx="64" style="mask: url(#mask)" />
+            <rect fill="#b91c1c" width="512" height="512" rx="64" style="position: absolute;"/>
+            <path fill="#ffffff" d="M384 256H128v-64h256v64zm0 64H128v-64h256v64z"/>
+            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
+            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+            <rect fill="#b91c1c" x="0" y="0" width="512" height="512" rx="64"/>
+            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
+            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+          </svg>
+        </div>
         <div>
             <h2 style="margin:0">Login erforderlich</h2>
             <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
@@ -426,7 +441,13 @@
   <div class="wrap" role="main" style="display:none;" id="mainAppWrap"> 
     <div class="panel" id="appArea" aria-hidden="true">
       <header class="app-header">
-        <div class="logo">DRK</div>
+        <div class="logo">
+          <svg fill="#ffffff" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="display: block;">
+            <rect fill="#b91c1c" width="512" height="512" rx="64" />
+            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
+            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+          </svg>
+        </div>
         <div class="title">
           <h1>EAE DRK-Team</h1>
           <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
@@ -809,7 +830,7 @@
         teamNotesDisplay.appendChild(card);
     }
     
-    // NEW: deleteNotes function
+    // deleteNotes function
     function deleteNotes() {
         if (!confirm('Sind Sie sicher, dass Sie die Team-Notizen löschen möchten?')) return;
         teamNotes = '';
