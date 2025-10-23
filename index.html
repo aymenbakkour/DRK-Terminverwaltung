@@ -411,15 +411,12 @@
       <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
       <div>
         <h2 style="margin:0">Login erforderlich</h2>
-        <div class="small muted">Bitte mit Benutzername und Passwort anmelden</div>
+        <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
       </div>
     </div>
 
-    <label for="username">Benutzername</label>
-    <input id="username" type="text" autocomplete="username">
-
-    <label for="password">Passwort</label>
-    <input id="password" type="password" autocomplete="current-password">
+    <label for="pin">PIN eingeben</label>
+    <input id="pin" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
       <div class="small muted"></div>
@@ -432,9 +429,8 @@
   </div>
 
   <script>
-    // Credentials (keine Anzeige im UI)
-    const VALID_USERNAME = 'admin';
-    const VALID_PASSWORD = 'drk2025';
+    // بيانات الاعتماد (PIN)
+    const VALID_PIN = '9001';
 
     // DOM
     const loginScreen = document.getElementById('loginScreen');
@@ -448,9 +444,9 @@
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
-    // NEW DOM elements for Transfer
     const transferModal = document.getElementById('transferModal');
     const transferForm = document.getElementById('transferForm');
+    const pinInput = document.getElementById('pin'); // جلب عنصر PIN
 
     let appointments = [];
 
@@ -459,18 +455,20 @@
 
     // login flow
     loginBtn.addEventListener('click', checkLogin);
-    document.getElementById('password').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
-    document.getElementById('username').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
-
+    if (pinInput) {
+        pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
+    }
+    
+    // منطق التحقق من PIN
     function checkLogin(){
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value;
-      if (u === VALID_USERNAME && p === VALID_PASSWORD){
-        loginError.textContent = '';
-        openApp();
-      } else {
-        loginError.textContent = 'Falscher Benutzername oder Passwort.';
+      const pin = document.getElementById('pin').value.trim();
+      if (pin !== VALID_PIN){
+        loginError.textContent = 'Falscher PIN.';
+        return;
       }
+      
+      loginError.textContent = '';
+      openApp();
     }
 
     function openApp(){
@@ -483,8 +481,8 @@
     function logout(){
       appArea.setAttribute('aria-hidden','true');
       loginScreen.style.display = 'block';
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
+      const pinInput = document.getElementById('pin');
+      if (pinInput) pinInput.value = '';
       loginError.textContent = '';
     }
 
@@ -598,15 +596,9 @@
             notes: document.getElementById('transferNotes').value.trim()
         };
         
-        // In a real application, you would send transferData to a server.
+        // هنا يمكن إضافة منطق إرسال بيانات التحويل إلى النظام الفعلي
         console.log('Transfer gespeichert:', transferData);
         alert(`Transfer für ${transferData.firstName} ${transferData.lastName} gespeichert!`);
-        
-        // Optionally remove the appointment after 'transferring' it:
-        // const idx = parseInt(transferData.index);
-        // appointments.splice(idx, 1);
-        // saveAppointments();
-        // renderAppointments();
         
         closeTransferModal();
     });
