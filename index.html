@@ -84,12 +84,13 @@
       align-items:center;
       margin-bottom:18px;
     }
+    /* UPDATED: Logo style for red cross only */
     .logo{
       width:64px;height:64px;border-radius:12px;
-      background: linear-gradient(135deg,var(--accent),var(--accent-2)); /* Kept the background gradient */
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;
-      box-shadow: 0 8px 24px rgba(7,89,133,0.12), inset 0 -6px 18px rgba(255,255,255,0.06);
-      /* Ensure SVG or image fits within this container */
+      background: #ffffff; 
+      border: 1px solid rgba(15,23,42,0.06); 
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: var(--shadow);
     }
     .title{
       display:flex;flex-direction:column;
@@ -133,10 +134,10 @@
         color: #fff; 
     }
     
-    /* UPDATED: Notes specific styles (Yellow/Gelb) */
+    /* Notes specific styles (Yellow/Gelb) */
     .btn-notes-new {
         background: linear-gradient(90deg, #fcd34d, #f59e0b); 
-        color: #1f2937; /* Dark text for contrast */
+        color: #1f2937; 
         box-shadow: 0 8px 20px rgba(253, 211, 77, 0.4); 
     }
     .note-card {
@@ -402,20 +403,10 @@
   <div id="loginScreen">
     <div id="loginCard">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">
-           <svg fill="#ffffff" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="display: block;">
-            <path fill="#ffffff" d="M384 256H128v-64h256v64zm0 64H128v-64h256v64z"/>
-            <path fill="#ffffff" d="M320 192H192v128h128V192zm-64 64h64v64H256v-64z"/>
-            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
-            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
-            <rect fill="#b91c1c" width="512" height="512" rx="64" style="mask: url(#mask)" />
-            <rect fill="#b91c1c" width="512" height="512" rx="64" style="position: absolute;"/>
-            <path fill="#ffffff" d="M384 256H128v-64h256v64zm0 64H128v-64h256v64z"/>
-            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
-            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
-            <rect fill="#b91c1c" x="0" y="0" width="512" height="512" rx="64"/>
-            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
-            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+        <div style="width:48px;height:48px;border-radius:10px;background:white;border:1px solid rgba(15,23,42,0.06);display:flex;align-items:center;justify-content:center;">
+           <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="display: block;">
+            <rect fill="#b91c1c" x="128" y="224" width="256" height="64"/>
+            <rect fill="#b91c1c" x="224" y="128" width="64" height="256"/>
           </svg>
         </div>
         <div>
@@ -442,10 +433,9 @@
     <div class="panel" id="appArea" aria-hidden="true">
       <header class="app-header">
         <div class="logo">
-          <svg fill="#ffffff" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="display: block;">
-            <rect fill="#b91c1c" width="512" height="512" rx="64" />
-            <rect fill="#ffffff" x="128" y="224" width="256" height="64"/>
-            <rect fill="#ffffff" x="224" y="128" width="64" height="256"/>
+          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="display: block;">
+            <rect fill="#b91c1c" x="128" y="224" width="256" height="64"/>
+            <rect fill="#b91c1c" x="224" y="128" width="64" height="256"/>
           </svg>
         </div>
         <div class="title">
@@ -471,12 +461,6 @@
         </div>
       </div>
 
-      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
-        <div class="today-card">
-          <h3>Heute</h3>
-          <ul id="todayAppointments" class="muted"></ul>
-        </div>
-      </div>
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
           <button class="btn btn-notes-new" onclick="openNotesModal()">➕ Notizen (Team)</button>
@@ -491,6 +475,12 @@
       
       <div id="teamNotesDisplay">
         </div>
+      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
+        <div class="today-card">
+          <h3>Heute</h3>
+          <ul id="todayAppointments" class="muted"></ul>
+        </div>
+      </div>
       <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 20px;">
         <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
         <div class="appointments-grid" id="transferListGrid">
@@ -508,7 +498,7 @@
     <aside class="side" aria-hidden="true">
       <div class="card centered" aria-hidden="false">
         <div style="font-size:36px;font-weight:800;color:var(--accent)">❤️</div>
-        <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Terminverwaltung.</div>
+        <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Teamverwaltung.</div>
       </div>
     </aside>
   </div>
