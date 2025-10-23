@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <title>DRK Terminverwaltung — Modern</title>
+  <title>EAE DRK-Team</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -130,6 +130,35 @@
         background: linear-gradient(90deg, #10b981, #059669); 
         color: #fff; 
     }
+    
+    /* NEW: Notes specific styles */
+    .btn-notes-new {
+        background: linear-gradient(90deg, #1d9e79, #10b981); /* Darker green/Teal */
+        color: #fff; 
+        box-shadow: 0 8px 20px rgba(29, 158, 121, 0.2); 
+    }
+    .note-card {
+        background: #fffbe6; /* Light Yellow for notes */
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        white-space: pre-wrap; /* Keeps line breaks */
+    }
+    .note-card h4 {
+        margin-top: 0;
+        color: #92400e; /* Brownish color for title */
+        font-size: 16px;
+    }
+    .note-card p {
+        margin: 8px 0 0 0;
+        color: #6b7280;
+        font-size: 14px;
+        border-top: 1px dashed rgba(15,23,42,0.05);
+        padding-top: 8px;
+    }
+
+
     .patient-entry { 
         display: grid;
         grid-template-columns: 1fr 80px 30px; 
@@ -386,8 +415,7 @@
       <header class="app-header">
         <div class="logo">DRK</div>
         <div class="title">
-          <h1>DRK Terminverwaltung</h1>
-          <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
+          <h1>EAE DRK-Team</h1> <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
         </div>
       </header>
       
@@ -410,6 +438,8 @@
 
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-notes-new" onclick="openNotesModal()">➕ Notizen (Team)</button>
+          
           <button class="btn btn-primary" onclick="openModal()">➕ Neuer Termin</button>
           <button class="btn btn-transfer-new" onclick="openNewTransferModal()">➕ Neuer Transfer</button> 
         </div>
@@ -418,7 +448,9 @@
           <button class="btn btn-logout" onclick="logout()">Abmelden</button>
         </div>
       </div>
-
+      
+      <div id="teamNotesDisplay">
+        </div>
       <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 20px;">
         <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
         <div class="appointments-grid" id="transferListGrid">
@@ -517,6 +549,23 @@
       </form>
     </div>
   </div>
+  <div class="modal" id="notesModal" role="dialog" aria-modal="true" aria-labelledby="notesModalTitle">
+    <div class="head">
+      <div id="notesModalTitle">Wichtige Notizen für das Team</div>
+      <button onclick="closeNotesModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <div class="body">
+      <form id="notesForm">
+        <label for="teamNotes">Mitteilungen an das Team eingeben (z.B. wichtige Anweisungen, Änderungen etc.)</label>
+        <textarea id="teamNotes" style="min-height:200px;resize:vertical;" placeholder="Ihre Notizen hier eingeben..."></textarea>
+        
+        <div class="foot">
+          <button type="button" onclick="closeNotesModal()" class="btn btn-ghost">Abbrechen</button>
+          <button type="submit" class="btn btn-primary btn-notes-new">Notizen speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
     // Credentials (keine Anzeige im UI)
     const VALID_PIN = '9001'; 
@@ -528,12 +577,12 @@
     const appArea = document.getElementById('appArea');
     const mainAppWrap = document.getElementById('mainAppWrap'); 
     const appointmentList = document.getElementById('appointmentList'); 
-    const transferListGrid = document.getElementById('transferListGrid'); // New
+    const transferListGrid = document.getElementById('transferListGrid'); 
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
     const statToday = document.getElementById('statToday');
-    const statTransferTotal = document.getElementById('statTransferTotal'); // New
-    const statTransferToday = document.getElementById('statTransferToday'); // New
+    const statTransferTotal = document.getElementById('statTransferTotal'); 
+    const statTransferToday = document.getElementById('statTransferToday'); 
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
@@ -543,10 +592,14 @@
     const currentDateElement = document.getElementById('currentDate');
     const currentTimeElement = document.getElementById('currentTime');
     const pinInput = document.getElementById('pin'); 
+    const notesModal = document.getElementById('notesModal'); // NEW
+    const notesForm = document.getElementById('notesForm');   // NEW
+    const teamNotesDisplay = document.getElementById('teamNotesDisplay'); // NEW
 
 
     let appointments = [];
     let transfers = []; 
+    let teamNotes = ''; // NEW: Variable to hold team notes
 
     function escapeHtml(s){ if (s===undefined||s===null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
     function todayISO(){ return new Date().toISOString().split('T')[0]; }
@@ -571,8 +624,10 @@
       appArea.setAttribute('aria-hidden','false');
       loadAppointments();
       loadTransfers(); 
+      loadNotes(); // NEW: Load notes on startup
       renderAppointments();
       renderTransfers();
+      renderNotes(); // NEW: Render notes
       updateDateTime();
       setInterval(updateDateTime, 1000);
     }
@@ -599,6 +654,10 @@
       try { transfers = JSON.parse(raw) } catch { transfers = [] }
     }
     function saveTransfers(){ localStorage.setItem('transfers', JSON.stringify(transfers)) }
+    
+    // NEW: Notes Storage
+    function loadNotes(){ teamNotes = localStorage.getItem('teamNotes') || '' }
+    function saveNotes(){ localStorage.setItem('teamNotes', teamNotes) }
 
 
     // --- Rendering Appointments as Cards ---
@@ -606,15 +665,12 @@
         const today = todayISO();
         const todayCount = appointments.filter(a => a.date === today).length;
         
-        // Clear containers
-        appointmentList.innerHTML = ''; // This is the appointments-grid
+        appointmentList.innerHTML = ''; 
         todayAppointments.innerHTML = ''; 
 
         appointments.forEach((a, i) => {
-            // --- 1. Create Appointment Card (main list) ---
             const card = document.createElement('div');
             card.className = 'appointment-card';
-            // Add a highlight class for today's appointments
             if (a.date === today) {
                 card.style.border = '1px solid var(--accent-2)';
                 card.style.boxShadow = '0 6px 16px rgba(0,120,212,0.1)';
@@ -644,7 +700,6 @@
             `; 
             appointmentList.appendChild(card);
 
-            // --- 2. Create Today's List Item ---
             if (a.date === today){
               const li = document.createElement('li');
               li.textContent = `${a.firstName} ${a.lastName} (${a.room}) um ${a.time}`;
@@ -652,12 +707,10 @@
             }
         });
 
-        // Update stats and quick info
         statTotal.textContent = appointments.length;
         statToday.textContent = todayCount;
         quickInfo.textContent = appointments.length ? `${appointments.length} Termine insgesamt` : 'Keine Termine vorhanden';
         
-        // Handle empty list case (Updated for card layout)
         if (!appointments.length) {
             const emptyMessage = document.createElement('div');
             emptyMessage.style.textAlign = 'center';
@@ -675,7 +728,6 @@
         
         transferListGrid.innerHTML = ''; 
         
-        // Update total stat
         if (statTransferTotal) statTransferTotal.textContent = transfers.length; 
         if (statTransferToday) statTransferToday.textContent = todayTransfersCount; 
 
@@ -722,6 +774,23 @@
         });
     }
 
+    // NEW: Rendering Team Notes
+    function renderNotes(){
+        teamNotesDisplay.innerHTML = '';
+        if (teamNotes.trim() === '') {
+            teamNotesDisplay.innerHTML = `<div class="small muted" style="padding: 10px 0;">Keine wichtigen Notizen vorhanden.</div>`;
+            return;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'note-card';
+        card.innerHTML = `
+            <h4>Wichtige Teamanweisungen (Zuletzt gespeichert: ${new Date().toLocaleTimeString('de-DE')})</h4>
+            <p>${escapeHtml(teamNotes)}</p>
+        `;
+        teamNotesDisplay.appendChild(card);
+    }
+    
     // Function to update the date and time display
     function updateDateTime() {
       const now = new Date();
@@ -838,7 +907,7 @@
         return bewohner; 
     }
 
-    // --- New Transfer Modal (Multiple Residents) ---
+    // --- Transfer Modal (Multiple Residents) ---
     function openNewTransferModal(){
         newTransferForm.reset();
         document.getElementById('newTransferDate').value = todayISO();
@@ -855,7 +924,6 @@
 
     function closeNewTransferModal(){ 
         newTransferModal.style.display = 'none';
-        // Clear edit index when closing
         let editIndexInput = document.getElementById('editTransferIndex');
         if (editIndexInput) editIndexInput.value = '';
     }
@@ -907,11 +975,9 @@
         const editIndex = document.getElementById('editTransferIndex').value;
 
         if (editIndex !== '') {
-            // Edit existing transfer
             transfers[parseInt(editIndex)] = t;
             alert(`Transfer erfolgreich aktualisiert!`); 
         } else {
-            // Add new transfer
             transfers.push(t); 
             alert(`Neuer Transfer für ${bewohner.length} Bewohner erfolgreich gespeichert!`); 
         }
@@ -919,6 +985,27 @@
         saveTransfers();
         renderTransfers();
         closeNewTransferModal();
+    });
+
+    // NEW: Notes Modal Functions
+    function openNotesModal(){
+        document.getElementById('teamNotes').value = teamNotes;
+        notesModal.style.display = 'block';
+        document.getElementById('teamNotes').focus();
+    }
+    
+    function closeNotesModal(){
+        notesModal.style.display = 'none';
+    }
+
+    notesForm.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        teamNotes = document.getElementById('teamNotes').value.trim();
+        saveNotes();
+        renderNotes();
+        closeNotesModal();
+        alert('Notizen erfolgreich gespeichert!');
     });
 
 
@@ -931,7 +1018,7 @@
     }
 
     function exportJSON(){
-      const dataStr = JSON.stringify({ appointments, transfers },null,2);
+      const dataStr = JSON.stringify({ appointments, transfers, teamNotes },null,2);
       const blob = new Blob([dataStr],{type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -940,10 +1027,10 @@
     }
 
     window.addEventListener('load', () => {
-      // Initialize on load, but keep main app hidden
       loadAppointments();
       loadTransfers(); 
-      // Ensure the login screen is visible and main app is hidden initially
+      loadNotes(); // Load notes
+      
       loginScreen.style.display = 'flex';
       mainAppWrap.style.display = 'none';
       if (pinInput) pinInput.focus();
@@ -953,6 +1040,7 @@
     window.addEventListener('click', e => {
       if (e.target === modal) closeModal();
       if (e.target === newTransferModal) closeNewTransferModal();
+      if (e.target === notesModal) closeNotesModal(); // NEW
     });
   </script>
 </body>
