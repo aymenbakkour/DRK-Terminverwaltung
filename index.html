@@ -138,10 +138,8 @@
     .muted{color:var(--muted);font-size:13px}
     .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(15,23,42,0.04);font-size:13px}
 
-    /* تحسين عرض الخلايا في وضع الموبايل */
     td.actions{
       display:flex;gap:8px;
-      /* في وضع سطح المكتب لا نحتاج تغيير التنسيق */
     }
     td.actions button{padding:8px 10px;border-radius:8px;font-weight:600;border:0;cursor:pointer}
     .edit{background:linear-gradient(90deg,#06b6d4,#0ea5e9);color:#fff}
@@ -224,7 +222,13 @@
       }
       
       /* تخصيص موقع كل خلية في الـ grid */
-      td[data-label="Vorname"] { grid-area: name; font-size: 16px; font-weight: 700; color: #07142a; }
+      td[data-label="Vorname"] { 
+          grid-area: name; 
+          font-size: 16px; 
+          font-weight: 700; 
+          color: #07142a; 
+          padding-bottom: 0; /* تقليل المساحة السفلية */
+      }
       td[data-label="Zimmer"] { grid-area: room; }
       td[data-label="Adresse"] { grid-area: address; }
       td[data-label="Datum"] { grid-area: date; }
@@ -239,10 +243,14 @@
 
       td{padding:6px 0}
       
+      /* إخفاء تسمية Vorname وإبقاء القيمة كعنوان رئيسي */
+      td[data-label="Vorname"]:before { content: ""; display: none; }
+      
       /* إخفاء تسمية الإجراءات وإبقاء تسميات باقي الحقول */
       td:before{
         content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px
       }
+      
       td.actions:before { content: ""; display: none; } /* إخفاء تسمية Aktionen */
       
       .chip { font-size: 14px; } /* تكبير خط الشريحة قليلاً */
@@ -377,7 +385,7 @@
     </div>
 
     <label for="pin">PIN eingeben</label>
-    <input id="pin" type="tel" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
+    <input id="pin" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
       <div class="small muted"></div>
