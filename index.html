@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <title>DRK Terminverwaltung — Modern</title>
+  <title>EAE DRK-Team</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -29,16 +29,14 @@
     body{
       font-family:var(--mono);
       margin:0;
-      background:
-        radial-gradient(1000px 600px at 10% 10%, rgba(0,120,212,0.06), transparent 12%),
-        radial-gradient(800px 500px at 90% 90%, rgba(185,28,28,0.04), transparent 12%),
-        var(--bg);
+      background: #ffffff; 
       color:#0f172a;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:28px;
       display:flex;
       justify-content:center;
+      flex-direction: column; 
+      min-height: 100vh;
     }
 
     .wrap{
@@ -47,8 +45,13 @@
       display:flex;
       gap:var(--gap);
       align-items:flex-start;
+      padding:28px; 
+      flex-grow: 1; 
+      /* Fix for potential top-padding issues on mobile wrap */
+      padding-top: max(28px, env(safe-area-inset-top)); 
+      padding-bottom: max(28px, env(safe-area-inset-bottom));
     }
-
+    
     /* left column */
     .panel{
       flex:1 1 680px;
@@ -59,6 +62,37 @@
       border:1px solid rgba(15,23,42,0.04);
       backdrop-filter: blur(6px) saturate(120%);
     }
+    
+    /* Card style for elements moved to the main panel */
+    .card{
+      background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,0.04)
+    }
+    .card h4{margin:0 0 8px 0;font-size:15px}
+    /* Adjusted stat layout for better wrapping on small screens */
+    .stat{
+      display:flex;
+      gap:12px;
+      flex-wrap: wrap; 
+      justify-content: space-between; 
+    }
+    .stat > div { 
+      min-width: 45%; 
+      margin-bottom: 8px;
+    }
+    .stat .num{font-weight:700;font-size:20px;color:#07142a}
+    .small{font-size:13px;color:var(--muted)}
+    
+    /* Datetime Card styling */
+    .card .stat.datetime{
+        flex-direction:column; 
+        align-items:flex-start; 
+        gap:4px;
+        padding: 0;
+    }
+    .card .stat.datetime .num {
+        font-size: 18px; 
+    }
 
     header.app-header{
       display:flex;
@@ -66,11 +100,13 @@
       align-items:center;
       margin-bottom:18px;
     }
+    /* Logo style for red cross only */
     .logo{
       width:64px;height:64px;border-radius:12px;
-      background: linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;
-      box-shadow: 0 8px 24px rgba(7,89,133,0.12), inset 0 -6px 18px rgba(255,255,255,0.06);
+      background: #ffffff; 
+      border: 1px solid rgba(15,23,42,0.06); 
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: var(--shadow);
     }
     .title{
       display:flex;flex-direction:column;
@@ -84,11 +120,16 @@
       margin:12px 0 18px 0;
       flex-wrap:wrap;
     }
+    .controls > div:first-child { flex-grow: 1; display: flex; flex-wrap: wrap; gap: 8px;}
+    .controls > div:last-child { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
     .btn{
       display:inline-flex;align-items:center;gap:8px;
       padding:10px 14px;border-radius:10px;border:0;cursor:pointer;
       transition:all var(--transition);
-      font-weight:600;font-size:14px;
+      font-weight:600;
+      font-size:14px;
+      text-decoration: none; 
     }
     .btn-ghost{
       background:transparent;border:1px solid rgba(15,23,42,0.06);color:#07142a;
@@ -100,105 +141,353 @@
     .btn-logout{
       background:#fff;border:1px solid rgba(15,23,42,0.06);color:var(--muted);
     }
+    
+    /* Transfer specific styles */
+    .btn-transfer-new { 
+        background: linear-gradient(90deg, #10b981, #059669); 
+        color: #fff; 
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); 
+    }
+    .transfer-btn{ 
+        background: linear-gradient(90deg, #10b981, #059669); 
+        color: #fff; 
+    }
+    
+    /* Notes specific styles (Yellow/Gelb) */
+    .btn-notes-new {
+        background: linear-gradient(90deg, #fcd34d, #f59e0b); 
+        color: #1f2937; 
+        box-shadow: 0 8px 20px rgba(253, 211, 77, 0.4); 
+    }
+    .note-card {
+        background: #fffbe6; 
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        white-space: pre-wrap; 
+        display: flex; 
+        flex-direction: column;
+    }
+    .note-card h4 {
+        margin-top: 0;
+        margin-bottom: 0;
+        color: #92400e; 
+        font-size: 14px; 
+    }
+    .note-card p {
+        margin: 8px 0 0 0;
+        color: #6b7280;
+        font-size: 14px;
+        border-top: 1px dashed rgba(15,23,42,0.05);
+        padding-top: 8px;
+        white-space: pre-wrap;
+    }
+    .note-actions { 
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(15,23,42,0.05);
+    }
 
+
+    .patient-entry { 
+        display: grid;
+        grid-template-columns: 1fr 80px 30px; 
+        gap: 8px;
+        align-items: flex-end;
+        margin-top: 10px;
+    }
+    .patient-entry .remove-btn {
+        background: var(--danger);
+        color: white;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        height: 38px;
+    }
+    
+    /* Today summary section */
     .today{
-      display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:18px; 
     }
     .today .today-card{
-      flex:1;
+      flex:1; 
       background:linear-gradient(180deg, rgba(0,120,212,0.06), rgba(255,255,255,0.6));
-      padding:14px;border-radius:12px;border:1px solid rgba(7,89,133,0.06);
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(7,89,133,0.06);
       min-height:64px;
     }
-    .today .today-card h3{margin:0;font-size:13px;color:var(--accent-2)}
+    .today .today-card h3{
+      margin:0 0 8px 0; 
+      font-size:15px; 
+      color:var(--accent-2);
+    }
     .today ul{margin:8px 0 0 16px;color:var(--muted);padding:0}
 
-    /* table card */
+    /* CARD-BASED LAYOUT FOR APPOINTMENTS/TRANSFERS */
     .table-wrap{
-      border-radius:12px;overflow:hidden;border:1px solid rgba(15,23,42,0.04);
-      background:linear-gradient(180deg,#fff,#fbfbfd);
+      border-radius:var(--radius);
+      overflow:visible;
+      border:none;
+      background:none;
+      padding: 0;
     }
-    table{
-      width:100%;border-collapse:collapse;font-size:14px;
+    .appointments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+      gap: 16px;
+      margin-top: 16px;
     }
-    thead th{
-      text-align:left;padding:12px 16px;background:transparent;color:var(--muted);
-      font-weight:600;font-size:12px;border-bottom:1px solid rgba(15,23,42,0.04);
+    .appointment-card, .transfer-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,42,0.04);
+      transition: all 0.3s ease;
     }
-    tbody tr{
-      transition:background var(--transition);border-bottom:1px solid rgba(15,23,42,0.03);
+    .appointment-card:hover, .transfer-card:hover {
+        box-shadow: 0 10px 30px rgba(18,38,63,0.1);
     }
-    tbody tr:hover{background:linear-gradient(90deg, rgba(7,89,133,0.02), rgba(185,28,28,0.01))}
-    td{padding:14px 16px;vertical-align:middle}
-    .muted{color:var(--muted);font-size:13px}
-    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(15,23,42,0.04);font-size:13px}
 
-    td.actions{display:flex;gap:8px}
-    td.actions button{padding:8px 10px;border-radius:8px;font-weight:600;border:0;cursor:pointer}
-    .edit{background:linear-gradient(90deg,#06b6d4,#0ea5e9);color:#fff}
-    .del{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff}
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(15,23,42,0.05);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .card-name, .bewohner-info {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0;
+      line-height: 1;
+    }
+    .card-room {
+      background: rgba(0,120,212,0.1);
+      color: var(--accent-2);
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .card-detail {
+      display: flex;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .card-label {
+      font-weight: 600;
+      color: var(--muted);
+      min-width: 70px; 
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: flex-end;
+    }
+    
+    .edit { background:linear-gradient(90deg,#06b6d4,#0ea5e9); color:#fff }
+    .del { background:linear-gradient(90deg,#f97316,#ef4444); color:#fff }
 
-    /* right column */
+    /* TRANSFER CARDS Specific Style */
+    .transfer-card {
+        border-left: 4px solid #00a896;
+    }
+    .transfer-card.today-transfer { 
+        background: #fee2e2; 
+        border: 1px solid var(--accent); 
+        border-left: 4px solid var(--accent);
+    }
+    .transfer-card .bewohner-info {
+        color: #07142a; 
+    }
+
+    /* right column (now only contains the small decorative card) */
     .side{
       width:320px;flex:0 0 320px;position:sticky;top:28px;
       display:flex;flex-direction:column;gap:var(--gap);
     }
-    .card{
-      background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);
-      border:1px solid rgba(15,23,42,0.04)
+    .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
+
+    /* UPDATED: Footer is now outside the wrap in some cases but uses global flex layout */
+    footer.copy{
+        font-size:13px;
+        color:var(--muted);
+        text-align:center;
+        padding:12px 0;
+        width: 100%;
+        max-width: var(--max-width);
+        margin: 0 auto;
     }
-    .card h4{margin:0 0 8px 0;font-size:15px}
-    .stat{display:flex;align-items:center;gap:12px}
-    .stat .num{font-weight:700;font-size:20px;color:#07142a}
-    .small{font-size:13px;color:var(--muted)}
 
-    footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
+    /* TAB STYLES */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid rgba(15,23,42,0.05);
+      margin-bottom: 18px;
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 10px 14px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: all var(--transition);
+      margin-bottom: -2px; /* Pull into border */
+    }
+    .tab-btn:hover {
+      color: #07142a;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom: 3px solid var(--accent);
+    }
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    /* END TAB STYLES */
 
-    /* modal beautiful */
+    /* MODAL STYLES (Mobile Optimization) */
     .modal{
       display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
       background:linear-gradient(180deg,#fff,#fafbff);padding:0;border-radius:14px;z-index:1200;width:520px;
       box-shadow: 0 30px 80px rgba(6,12,34,0.22);
+      max-height: 90vh; 
+      overflow-y: auto; 
     }
     .modal .head{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:14px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
     .modal .body{padding:16px}
     .modal label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
-    .modal input{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);font-size:14px}
+    
+    .modal input, .modal textarea{
+        width:100%;
+        padding:10px;
+        margin-top:6px;
+        border-radius:10px;
+        border:1px solid rgba(15,23,42,0.06);
+        font-size:16px; 
+    }
+
     .modal .foot{padding:12px;text-align:right;border-top:1px solid rgba(15,23,42,0.03)}
     .modal button{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
 
     /* login panel */
     #loginScreen{
-      width:420px;border-radius:16px;padding:20px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:var(--shadow);
-      border:1px solid rgba(15,23,42,0.04);
+      width:100%;
+      height:100vh;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:1300;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background: #ffffff; 
     }
+    
+    #loginCard {
+        width:420px;
+        border-radius:16px;
+        padding:20px;
+        background:var(--card);
+        box-shadow:var(--shadow);
+        border:1px solid rgba(15,23,42,0.04);
+    }
+
     #loginScreen h2{margin:0 0 8px 0}
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
-    #loginScreen input{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06)}
-
-    .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
+    #loginScreen input{
+        width:100%;
+        padding:10px;
+        margin-top:6px;
+        border-radius:10px;
+        border:1px solid rgba(15,23,42,0.06);
+        font-size:16px; 
+    }
 
     /* responsive adjustments */
     @media (max-width:1024px){
+      body { min-height: 100vh; }
       .wrap{flex-direction:column;padding:18px}
-      .side{width:100%;flex:0 0 auto;position:static}
+      .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} 
       .panel{order:0}
+      .appointments-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      footer.copy { padding: 12px 18px; } 
+    }
+    
+    /* MODAL FIX & Mobile Optimization */
+    @media (max-width:768px) { 
+        .modal {
+            width: calc(100% - 36px); 
+            top: 20px; 
+            left: 50%;
+            transform: translate(-50%, 0); 
+            max-height: calc(100vh - 40px); 
+            border-radius: 8px;
+        }
+        
+        .modal .head { 
+            border-radius: 8px 8px 0 0;
+            padding: 12px;
+        }
+
+        /* Ensure time and date fields stack on smaller screens if they are in a flex container */
+        #newTransferForm > div:has(input[type="date"]){
+            flex-direction: column;
+            gap: 0 !important;
+        }
+        #newTransferForm > div:has(input[type="date"]) input {
+             margin-top: 6px;
+        }
     }
 
+
     @media (max-width:560px){
-      body{padding:14px}
+      body{padding:0} 
+      .wrap{padding:14px} 
       .panel{padding:14px;border-radius:10px}
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
-      .side{display:none}
-      table, thead, tbody, th, td, tr{display:block}
-      thead{display:none}
-      tbody tr{margin-bottom:12px;border-radius:10px;padding:12px;border:1px solid rgba(15,23,42,0.04);background:#fff}
-      td{padding:6px 0}
-      td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
-      td.actions{display:flex;gap:8px}
-      .modal{width:94%}
-      #loginScreen{width:100%;border-radius:10px}
+      
+      .side{display:flex; order: 1;} 
+      
+      #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} 
+      
+      /* Control button adjustments for small screens */
+      .controls { flex-direction: column; gap: 10px; }
+      .controls > div:first-child { flex-direction: column; }
+      .controls > div:last-child { margin-left: 0; justify-content: space-between; }
+      .btn { width: 100%; justify-content: center; }
+      
+      /* Stat cards for very small screens */
+      .stat { gap: 8px; }
+      .stat > div { min-width: 48%; }
+      .stat > div:nth-child(2n) { margin-left: auto; } 
     }
 
     /* focus */
@@ -206,19 +495,79 @@
   </style>
 </head>
 <body>
-  <div class="wrap" role="main">
+  
+  <div id="loginScreen">
+    <div id="loginCard">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="width:48px;height:48px;border-radius:10px;background:white;border:1px solid rgba(15,23,42,0.06);display:flex;align-items:center;justify-content:center;">
+           <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="display: block;">
+            <rect fill="#b91c1c" x="128" y="224" width="256" height="64"/>
+            <rect fill="#b91c1c" x="224" y="128" width="64" height="256"/>
+          </svg>
+        </div>
+        <div>
+            <h2 style="margin:0">Login erforderlich</h2>
+            <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
+        </div>
+        </div>
+
+        <label for="pin">PIN eingeben</label>
+        <input id="pin" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <div class="small muted"></div>
+        <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" id="loginBtn">Einloggen</button>
+        </div>
+        </div>
+
+        <div id="loginError" class="small" style="color:var(--danger);margin-top:10px;min-height:18px"></div>
+    </div>
+  </div>
+
+  <div class="wrap" role="main" style="display:none;" id="mainAppWrap"> 
     <div class="panel" id="appArea" aria-hidden="true">
       <header class="app-header">
-        <div class="logo">DRK</div>
+        <div class="logo">
+          <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" width="40" height="40" style="display: block;">
+            <rect fill="#b91c1c" x="128" y="224" width="256" height="64"/>
+            <rect fill="#b91c1c" x="224" y="128" width="64" height="256"/>
+          </svg>
+        </div>
         <div class="title">
-          <h1>DRK Terminverwaltung</h1>
+          <h1>EAE DRK-Team</h1>
           <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
         </div>
       </header>
-
+      
+      <div class="card" id="datetimeCard" style="margin-bottom: var(--gap);">
+        <div class="stat datetime">
+          <div class="num" id="currentDate">Datum wird geladen...</div>
+          <div class="small muted" id="currentTime">Uhrzeit wird geladen...</div>
+        </div>
+      </div>
+      
+      <div class="card" id="statsCard" style="margin-bottom: var(--gap);">
+        <h4>Statistiken</h4>
+        <div class="stat">
+          <div><div class="num" id="statTotal">0</div><div class="small muted">Gesamt Termine</div></div>
+          <div><div class="num" id="statToday">0</div><div class="small muted">Termine Heute</div></div>
+          <div><div class="num" id="statTransferTotal">0</div><div class="small muted">Gesamt Transfers</div></div>
+          <div><div class="num" id="statTransferToday">0</div><div class="small muted">Transfers Heute</div></div>
+        </div>
+      </div>
+      
+      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
+        <div class="today-card">
+          <h3>Heutige Termine</h3>
+          <ul id="todayAppointments" class="muted"></ul>
+        </div>
+      </div>
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-notes-new" onclick="openNotesModal()">➕ Notizen (Team)</button>
           <button class="btn btn-primary" onclick="openModal()">➕ Neuer Termin</button>
+          <button class="btn btn-transfer-new" onclick="openNewTransferModal()">➕ Neuer Transfer</button> 
         </div>
         <div style="margin-left:auto;display:flex;gap:8px">
           <input type="file" id="importFile" accept="application/json" style="display:none;" onchange="handleImport(event)">
@@ -227,62 +576,45 @@
           <button class="btn btn-logout" onclick="logout()">Abmelden</button>
         </div>
       </div>
-
-      <div class="today">
-        <div class="today-card">
-          <h3>Heute</h3>
-          <ul id="todayAppointments" class="muted"></ul>
-        </div>
-        <div class="today-card">
-          <h3>Schnellinfo</h3>
-          <div class="small muted" id="quickInfo">Keine Termine</div>
-        </div>
+      
+      <div class="tabs-nav">
+          <button class="tab-btn" id="btn-notes" onclick="switchTab('tab-notes', this)">Team Notizen</button>
+          <button class="tab-btn" id="btn-transfers" onclick="switchTab('tab-transfers', this)">Transfers</button>
+          <button class="tab-btn active" id="btn-appointments" onclick="switchTab('tab-appointments', this)">Termine</button>
       </div>
+      
+      <div class="tabs-content">
+          <div id="tab-notes" class="tab-pane">
+              <div id="teamNotesDisplay">
+                </div>
+              </div>
 
-      <div class="table-wrap" role="region" aria-label="Termintabelle">
-        <table>
-          <thead>
-            <tr>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>Zimmer</th>
-              <th>Adresse</th>
-              <th>Datum</th>
-              <th>Uhrzeit</th>
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody id="appointmentList"></tbody>
-        </table>
+          <div id="tab-transfers" class="tab-pane">
+              <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 0;">
+                <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
+                <div class="appointments-grid" id="transferListGrid">
+                  </div>
+              </div>
+          </div>
+
+          <div id="tab-appointments" class="tab-pane active">
+              <div class="table-wrap" role="region" aria-label="Termin-Karten">
+                <div class="appointments-grid" id="appointmentList">
+                  </div>
+              </div>
+          </div>
       </div>
-
-      <div style="height:12px"></div>
-      <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
-    </div>
+      </div>
 
     <aside class="side" aria-hidden="true">
-      <div class="card">
-        <h4>Statistiken</h4>
-        <div class="stat" style="justify-content:space-between">
-          <div><div class="num" id="statTotal">0</div><div class="small muted">Gesamt</div></div>
-          <div><div class="num" id="statToday">0</div><div class="small muted">Heute</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h4>Schnelle Aktionen</h4>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="clearAll()">Alle löschen</button>
-        </div>
-      </div>
-
       <div class="card centered" aria-hidden="false">
         <div style="font-size:36px;font-weight:800;color:var(--accent)">❤️</div>
-        <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Terminverwaltung.</div>
+        <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Teamverwaltung.</div>
       </div>
     </aside>
   </div>
-
+  
+  <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
   <div class="modal" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="head">
       <div id="modalTitle">Neuer Termin</div>
@@ -316,160 +648,340 @@
       </form>
     </div>
   </div>
-
-  <div id="loginScreen" class="card" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1300">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-      <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
-      <div>
-        <h2 style="margin:0">Login erforderlich</h2>
-        <div class="small muted">Bitte mit Benutzername und Passwort anmelden</div>
-      </div>
+  
+  <div class="modal" id="newTransferModal" role="dialog" aria-modal="true" aria-labelledby="newTransferModalTitle">
+    <div class="head">
+      <div id="newTransferModalTitle">Neuer Bewohnertransfer eintragen</div> 
+      <button onclick="closeNewTransferModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
     </div>
+    <div class="body">
+      <form id="newTransferForm">
+        <input type="hidden" id="editTransferIndex"> <label>Datum und Uhrzeit</label>
+        <div style="display:flex; gap:10px;">
+            <input id="newTransferDate" type="date" required style="flex:1">
+            <input id="newTransferTime" type="time" required style="flex:1">
+        </div>
 
-    <label for="username">Benutzerنامه</label>
-    <input id="username" type="text" autocomplete="username">
+        <label style="margin-top:16px;">Bewohner (Name und Zimmernummer)</label>
+        <div id="newBewohnerListContainer">
+            </div>
 
-    <label for="password">Passwort</label>
-    <input id="password" type="password" autocomplete="current-password">
+        <button type="button" class="btn btn-ghost" onclick="addBewohnerField('newBewohnerListContainer')">
+            ➕ Bewohner hinzufügen
+        </button>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-      <div class="small muted"></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary" id="loginBtn">Einloggen</button>
-      </div>
+        <label for="newTransferNotes">Bemerkungen/Notizen</label>
+        <textarea id="newTransferNotes" style="min-height:100px;resize:vertical;" placeholder="Geben Sie hier zusätzliche Bemerkungen zum Transfer ein."></textarea>
+        
+        <div class="foot">
+          <button type="button" onclick="closeNewTransferModal()" class="btn btn-ghost">Abbrechen</button>
+          <button type="submit" class="btn btn-primary transfer-btn">Speichern</button>
+        </div>
+      </form>
     </div>
-
-    <div id="loginError" class="small" style="color:var(--danger);margin-top:10px;min-height:18px"></div>
   </div>
-
+  <div class="modal" id="notesModal" role="dialog" aria-modal="true" aria-labelledby="notesModalTitle">
+    <div class="head">
+      <div id="notesModalTitle">Wichtige Notizen für das Team</div>
+      <button onclick="closeNotesModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <div class="body">
+      <form id="notesForm">
+        <label for="teamNotes">Mitteilungen an das Team eingeben (z.B. wichtige Anweisungen, Änderungen etc.)</label>
+        <textarea id="teamNotes" style="min-height:200px;resize:vertical;" placeholder="Ihre Notizen hier eingeben..."></textarea>
+        
+        <div class="foot">
+          <button type="button" onclick="closeNotesModal()" class="btn btn-ghost">Abbrechen</button>
+          <button type="submit" class="btn btn-primary btn-notes-new">Notizen speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
     // Credentials (keine Anzeige im UI)
-    const VALID_USERNAME = 'admin';
-    const VALID_PASSWORD = 'drk2025';
+    const VALID_PIN = '9001'; 
 
     // DOM
     const loginScreen = document.getElementById('loginScreen');
     const loginBtn = document.getElementById('loginBtn');
     const loginError = document.getElementById('loginError');
     const appArea = document.getElementById('appArea');
-    const appointmentList = document.getElementById('appointmentList');
+    const mainAppWrap = document.getElementById('mainAppWrap'); 
+    const appointmentList = document.getElementById('appointmentList'); 
+    const transferListGrid = document.getElementById('transferListGrid'); 
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
     const statToday = document.getElementById('statToday');
-    const quickInfo = document.getElementById('quickInfo');
+    const statTransferTotal = document.getElementById('statTransferTotal'); 
+    const statTransferToday = document.getElementById('statTransferToday'); 
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
+    const newTransferModal = document.getElementById('newTransferModal');
+    const newTransferForm = document.getElementById('newTransferForm');
+    const newBewohnerListContainer = document.getElementById('newBewohnerListContainer'); 
+    const currentDateElement = document.getElementById('currentDate');
+    const currentTimeElement = document.getElementById('currentTime');
+    const pinInput = document.getElementById('pin'); 
+    const notesModal = document.getElementById('notesModal');
+    const notesForm = document.getElementById('notesForm');
+    const teamNotesDisplay = document.getElementById('teamNotesDisplay');
+    // Tab DOM elements
+    const btnAppointments = document.getElementById('btn-appointments');
 
-    // البيانات الافتراضية هنا - سيتم استخدامها إذا لم يتم العثور على بيانات في الذاكرة المحلية (localStorage).
-    // **لتحديث بيانات GitHub، قم بنسخ ولصق مصفوفة البيانات المُصدَّرة مكان هذه المصفوفة**
-    let appointments = [
-        {
-            firstName: "علي",
-            lastName: "محمد",
-            room: "205",
-            address: "Frankfurt-Zentrum, 12",
-            date: "2025-10-30",
-            time: "10:00"
-        },
-        {
-            firstName: "سارة",
-            lastName: "أحمد",
-            room: "101",
-            address: "Riedberg, 5",
-            date: "2025-10-23",
-            time: "14:30"
-        }
-    ]; 
+
+    let appointments = [];
+    let transfers = []; 
+    let teamNotes = ''; 
 
     function escapeHtml(s){ if (s===undefined||s===null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
     function todayISO(){ return new Date().toISOString().split('T')[0]; }
-
-    // login flow
+    
+    // --- Login Flow ---
     loginBtn.addEventListener('click', checkLogin);
-    document.getElementById('password').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
-    document.getElementById('username').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
+    if (pinInput) { pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() }); } 
 
     function checkLogin(){
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value;
-      if (u === VALID_USERNAME && p === VALID_PASSWORD){
+      const pin = document.getElementById('pin').value.trim();
+      if (pin === VALID_PIN){
         loginError.textContent = '';
         openApp();
       } else {
-        loginError.textContent = 'Falscher Benutzername oder Passwort.';
+        loginError.textContent = 'Falscher PIN.'; 
       }
     }
 
     function openApp(){
       loginScreen.style.display = 'none';
+      mainAppWrap.style.display = 'flex';
       appArea.setAttribute('aria-hidden','false');
-      loadAppointments(); // تم تحديث هذه الدالة
-      renderAppointments();
+      loadAllData(); // Load all data including notes and transfers
+      renderAll();
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+      // Ensure the default tab is active on load
+      switchTab('tab-appointments', btnAppointments);
+    }
+
+    function renderAll(){
+        renderAppointments();
+        renderTransfers();
+        renderNotes();
     }
 
     function logout(){
       appArea.setAttribute('aria-hidden','true');
-      loginScreen.style.display = 'block';
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
+      mainAppWrap.style.display = 'none';
+      loginScreen.style.display = 'flex';
+      const pinInput = document.getElementById('pin');
+      if (pinInput) pinInput.value = ''; 
       loginError.textContent = '';
+      if (pinInput) pinInput.focus();
     }
 
-    // appointment storage (UPDATED)
-    function loadAppointments(){
-      const raw = localStorage.getItem('appointments');
-      // إذا وجدنا بيانات في localStorage، نستخدمها. هذه هي الأولوية.
-      if (raw) {
-          try { 
-              appointments = JSON.parse(raw);
-          } catch (e) { 
-              // إذا حدث خطأ في التحليل، نحتفظ بالبيانات الأولية (Hardcoded) 
-              console.error("Failed to parse localStorage, retaining hardcoded data.");
-          }
-      } 
-      // إذا لم نجد بيانات في localStorage، سيتم استخدام البيانات الأولية (Hardcoded) 
-      // التي وضعناها في `let appointments = [...]`.
+    // --- Tab Switching Logic ---
+    function switchTab(tabId, button) {
+        // 1. Hide all panes
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        // 2. Deactivate all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        // 3. Show the target pane
+        document.getElementById(tabId).classList.add('active');
+        // 4. Activate the clicked button
+        button.classList.add('active');
     }
     
+    // --- Storage ---
+    function loadAllData(){
+      loadAppointments();
+      loadTransfers(); 
+      loadNotes();
+    }
+    
+    function loadAppointments(){
+      const raw = localStorage.getItem('appointments') || '[]';
+      try { appointments = JSON.parse(raw) } catch { appointments = [] }
+    }
     function saveAppointments(){ localStorage.setItem('appointments', JSON.stringify(appointments)) }
 
-    // render
-    function renderAppointments(){
-      appointmentList.innerHTML = '';
-      todayAppointments.innerHTML = '';
-      const today = todayISO();
-      appointments.forEach((a,i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td data-label="Vorname">${escapeHtml(a.firstName)}</td>
-          <td data-label="Nachname">${escapeHtml(a.lastName)}</td>
-          <td data-label="Zimmer"><span class="chip">${escapeHtml(a.room)}</span></td>
-          <td data-label="Adresse" class="muted">${escapeHtml(a.address)}</td>
-          <td data-label="Datum">${escapeHtml(a.date)}</td>
-          <td data-label="Uhrzeit">${escapeHtml(a.time)}</td>
-          <td data-label="Aktionen" class="actions">
-            <button class="edit" onclick="openModal(${i})">Bearbeiten</button>
-            <button class="del" onclick="deleteAppointment(${i})">Löschen</button>
-          </td>
-        `;
-        appointmentList.appendChild(tr);
-        if (a.date === today){
-          const li = document.createElement('li');
-          li.textContent = `${a.firstName} ${a.lastName} (${a.room}) um ${a.time} — ${a.address}`;
-          todayAppointments.appendChild(li);
-        }
-      });
-      statTotal.textContent = appointments.length;
-      statToday.textContent = appointments.filter(a => a.date === todayISO()).length;
-      quickInfo.textContent = appointments.length ? `${appointments.length} Termine insgesamt` : 'Keine Termine vorhanden';
-      if (!appointments.length){
-        const r = document.createElement('tr');
-        r.innerHTML = `<td colspan="7" style="text-align:center;padding:18px;color:var(--muted)">Keine Termine</td>`;
-        appointmentList.appendChild(r);
-      }
+    function loadTransfers(){
+      const raw = localStorage.getItem('transfers') || '[]';
+      try { transfers = JSON.parse(raw) } catch { transfers = [] }
+    }
+    function saveTransfers(){ localStorage.setItem('transfers', JSON.stringify(transfers)) }
+    
+    function loadNotes(){ teamNotes = localStorage.getItem('teamNotes') || '' }
+    function saveNotes(){ localStorage.setItem('teamNotes', teamNotes) }
+    
+    // Unified Save All
+    function saveAllData(){
+        saveAppointments();
+        saveTransfers();
+        saveNotes();
     }
 
-    // modal
+
+    // --- Rendering Appointments as Cards ---
+    function renderAppointments(){
+        const today = todayISO();
+        const todayCount = appointments.filter(a => a.date === today).length;
+        
+        appointmentList.innerHTML = ''; 
+        todayAppointments.innerHTML = ''; 
+
+        appointments.forEach((a, i) => {
+            const card = document.createElement('div');
+            card.className = 'appointment-card';
+            if (a.date === today) {
+                card.style.border = '1px solid var(--accent-2)';
+                card.style.boxShadow = '0 6px 16px rgba(0,120,212,0.1)';
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <h4 class="card-name">${escapeHtml(a.firstName)} ${escapeHtml(a.lastName)}</h4>
+                    <span class="card-room">${escapeHtml(a.room)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Datum:</span>
+                    <span>${escapeHtml(a.date)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Uhrzeit:</span>
+                    <span>${escapeHtml(a.time)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Adresse:</span>
+                    <span class="muted" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(a.address)}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="edit btn" onclick="openModal(${i})">Bearbeiten</button>
+                    <button class="del btn" onclick="deleteAppointment(${i})">Löschen</button>
+                </div>
+            `; 
+            appointmentList.appendChild(card);
+
+            if (a.date === today){
+              const li = document.createElement('li');
+              li.textContent = `${a.firstName} ${a.lastName} (${a.room}) um ${a.time}`;
+              todayAppointments.appendChild(li);
+            }
+        });
+
+        statTotal.textContent = appointments.length;
+        statToday.textContent = todayCount;
+        
+        if (!appointments.length) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.style.textAlign = 'center';
+            emptyMessage.style.padding = '18px';
+            emptyMessage.style.color = 'var(--muted)';
+            emptyMessage.textContent = 'Keine Termine vorhanden';
+            appointmentList.appendChild(emptyMessage);
+        }
+         if (todayAppointments.children.length === 0) {
+            todayAppointments.innerHTML = `<li style="list-style: none; margin-left: -16px;">Keine Termine für heute</li>`;
+        }
+    }
+    
+    // --- Rendering Transfers as Cards ---
+    function renderTransfers(){
+        const today = todayISO();
+        const todayTransfersCount = transfers.filter(t => t.date === today).length;
+        
+        transferListGrid.innerHTML = ''; 
+        
+        if (statTransferTotal) statTransferTotal.textContent = transfers.length; 
+        if (statTransferToday) statTransferToday.textContent = todayTransfersCount; 
+
+        if (transfers.length === 0) {
+            transferListGrid.innerHTML = `<div class="small muted" style="padding: 18px; text-align: center;">Keine Transfers gespeichert.</div>`;
+            return;
+        }
+
+        transfers.forEach((t, i) => {
+            const card = document.createElement('div');
+            card.className = 'transfer-card';
+            if (t.date === today) {
+                card.classList.add('today-transfer'); 
+            }
+
+            const bewohnerCount = t.bewohner ? t.bewohner.length : 0; 
+            const dateStr = t.date === today ? 'Heute' : escapeHtml(t.date);
+            
+            const bewohnerNames = t.bewohner.map(b => `${escapeHtml(b.name)} (${escapeHtml(b.room)})`).join(', ');
+            
+            card.innerHTML = `
+                <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                    <h4 class="bewohner-info">${bewohnerCount} Bewohner Transfer</h4>
+                    <span class="card-room" style="background: rgba(185,28,28,0.1); color: var(--accent);">${dateStr}</span>
+                </div>
+                <div class="card-detail" style="flex-direction: column; margin-bottom: 12px;">
+                    <span class="card-label" style="min-width: auto; margin-bottom: 4px; font-size: 13px;">Bewohner:</span>
+                    <span style="font-size: 14px;">${bewohnerNames}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Uhrzeit:</span>
+                    <span>${escapeHtml(t.time)}</span>
+                </div>
+                <div class="card-detail" style="margin-bottom: 0;">
+                    <span class="card-label">Notiz:</span>
+                    <span class="muted" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${t.notes}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="edit btn" onclick="editTransfer(${i})">Bearbeiten</button>
+                    <button class="del btn" onclick="deleteTransfer(${i})">Löschen</button>
+                </div>
+            `;
+            transferListGrid.appendChild(card);
+        });
+    }
+
+    // Rendering Team Notes (Updated with buttons and smaller title)
+    function renderNotes(){
+        teamNotesDisplay.innerHTML = '';
+        if (teamNotes.trim() === '') {
+            teamNotesDisplay.innerHTML = `<div class="small muted" style="padding: 10px 0;">Keine wichtigen Notizen vorhanden.</div>`;
+            return;
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'note-card';
+        card.innerHTML = `
+            <h4>Wichtige Teamanweisungen</h4>
+            <div style="font-size:13px; color:var(--muted); margin-bottom: 8px;">Zuletzt gespeichert: ${new Date().toLocaleTimeString('de-DE')}</div>
+            <p>${escapeHtml(teamNotes)}</p>
+            <div class="note-actions">
+                <button class="edit btn" onclick="openNotesModal()">Bearbeiten</button>
+                <button class="del btn" onclick="deleteNotes()">Löschen</button>
+            </div>
+        `;
+        teamNotesDisplay.appendChild(card);
+    }
+    
+    // deleteNotes function
+    function deleteNotes() {
+        if (!confirm('Sind Sie sicher, dass Sie die Team-Notizen löschen möchten?')) return;
+        teamNotes = '';
+        saveNotes();
+        renderNotes();
+        alert('Team-Notizen erfolgreich gelöscht.');
+    }
+    
+    // Function to update the date and time display
+    function updateDateTime() {
+      const now = new Date();
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('de-DE', dateOptions);
+
+      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const timeStr = now.toLocaleTimeString('de-DE', timeOptions);
+
+      if (currentDateElement) currentDateElement.textContent = dateStr;
+      if (currentTimeElement) currentTimeElement.textContent = timeStr;
+    }
+
+
+    // --- Appointment Modal ---
     function openModal(index=null){
       document.getElementById('editIndex').value = index !== null ? index : '';
       document.getElementById('modalTitle').textContent = index !== null ? 'Termin bearbeiten' : 'Neuer Termin';
@@ -502,31 +1014,192 @@
       };
       const idx = document.getElementById('editIndex').value;
       if (idx === '') appointments.push(a); else appointments[idx] = a;
-      saveAppointments();
+      saveAllData();
       renderAppointments();
       closeModal();
     });
+    
+    // --- Dynamic Bewohner Fields (Helper) ---
+    function addBewohnerField(containerId, name = '', room = '', isReadOnly = false) { 
+        const container = document.getElementById(containerId);
+        const div = document.createElement('div');
+        div.className = 'patient-entry';
+        
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Bewohner Name'; 
+        nameInput.required = !isReadOnly;
+        nameInput.value = name;
+        nameInput.readOnly = isReadOnly;
+        nameInput.name = 'bewohnerName'; 
+        
+        const roomInput = document.createElement('input');
+        roomInput.type = 'text';
+        roomInput.placeholder = 'Zimmer Nr.';
+        roomInput.required = !isReadOnly;
+        roomInput.value = room;
+        roomInput.readOnly = isReadOnly;
+        roomInput.name = 'bewohnerRoom'; 
+        roomInput.style.width = '80px';
 
-    // delete and utilities
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'remove-btn';
+        removeButton.textContent = '✕';
+        removeButton.onclick = () => div.remove();
+        
+        if (isReadOnly) {
+            removeButton.style.visibility = 'hidden';
+            removeButton.disabled = true;
+            div.appendChild(nameInput);
+            div.appendChild(roomInput);
+            div.appendChild(removeButton);
+        } else {
+            div.appendChild(nameInput);
+            div.appendChild(roomInput);
+            div.appendChild(removeButton);
+        }
+
+        container.appendChild(div);
+        return { nameInput, roomInput };
+    }
+
+    function collectBewohnerData(containerId) { 
+        const container = document.getElementById(containerId);
+        const entries = container.querySelectorAll('.patient-entry');
+        const bewohner = []; 
+
+        entries.forEach(entry => {
+            const nameInput = entry.querySelector('input[name="bewohnerName"]'); 
+            const roomInput = entry.querySelector('input[name="bewohnerRoom"]');
+            
+            if (nameInput.value.trim() && roomInput.value.trim()) {
+                bewohner.push({ 
+                    name: nameInput.value.trim(),
+                    room: roomInput.value.trim()
+                });
+            }
+        });
+        return bewohner; 
+    }
+
+    // --- Transfer Modal (Multiple Residents) ---
+    function openNewTransferModal(){
+        newTransferForm.reset();
+        document.getElementById('newTransferDate').value = todayISO();
+        newBewohnerListContainer.innerHTML = ''; 
+        addBewohnerField('newBewohnerListContainer'); 
+        document.getElementById('newTransferModalTitle').textContent = 'Neuer Bewohnertransfer eintragen';
+        
+        let editIndexInput = document.getElementById('editTransferIndex');
+        if (editIndexInput) editIndexInput.value = ''; // Clear index for new entry
+        
+        newTransferModal.style.display = 'block';
+        document.getElementById('newTransferDate').focus();
+    }
+
+    function closeNewTransferModal(){ 
+        newTransferModal.style.display = 'none';
+        let editIndexInput = document.getElementById('editTransferIndex');
+        if (editIndexInput) editIndexInput.value = '';
+    }
+
+    function deleteTransfer(i){
+      if (!confirm('Diesen Transfer wirklich löschen?')) return;
+      transfers.splice(i,1);
+      saveAllData();
+      renderTransfers();
+    }
+    
+    function editTransfer(i){
+        const t = transfers[i];
+        
+        document.getElementById('newTransferDate').value = t.date || todayISO();
+        document.getElementById('newTransferTime').value = t.time || '08:00';
+        document.getElementById('newTransferNotes').value = t.notes || '';
+        document.getElementById('newTransferModalTitle').textContent = 'Transfer bearbeiten';
+        
+        newBewohnerListContainer.innerHTML = '';
+        t.bewohner.forEach(b => {
+            addBewohnerField('newBewohnerListContainer', b.name, b.room);
+        });
+        
+        document.getElementById('editTransferIndex').value = i;
+        
+        newTransferModal.style.display = 'block';
+        document.getElementById('newTransferDate').focus();
+    }
+
+    newTransferForm.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        const bewohner = collectBewohnerData('newBewohnerListContainer'); 
+
+        if (bewohner.length === 0) {
+            alert('Bitte mindestens einen Bewohner hinzufügen.');
+            return;
+        }
+
+        const t = {
+            timestamp: new Date().toISOString(),
+            date: document.getElementById('newTransferDate').value,
+            time: document.getElementById('newTransferTime').value,
+            notes: document.getElementById('newTransferNotes').value.trim() || 'Keine Notizen',
+            bewohner: bewohner 
+        };
+        
+        const editIndex = document.getElementById('editTransferIndex').value;
+
+        if (editIndex !== '') {
+            transfers[parseInt(editIndex)] = t;
+            alert(`Transfer erfolgreich aktualisiert!`); 
+        } else {
+            transfers.push(t); 
+            alert(`Neuer Transfer für ${bewohner.length} Bewohner erfolgreich gespeichert!`); 
+        }
+        
+        saveAllData();
+        renderTransfers();
+        closeNewTransferModal();
+    });
+
+    // Notes Modal Functions
+    function openNotesModal(){
+        document.getElementById('teamNotes').value = teamNotes;
+        notesModal.style.display = 'block';
+        document.getElementById('teamNotes').focus();
+    }
+    
+    function closeNotesModal(){
+        notesModal.style.display = 'none';
+    }
+
+    notesForm.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        teamNotes = document.getElementById('teamNotes').value.trim();
+        saveAllData();
+        renderNotes();
+        closeNotesModal();
+        alert('Notizen erfolgreich gespeichert!');
+    });
+
+
+    // --- File Sync / Utilities ---
     function deleteAppointment(i){
       if (!confirm('Diesen Termin wirklich löschen?')) return;
       appointments.splice(i,1);
-      saveAppointments();
-      renderAppointments();
-    }
-    function clearAll(){
-      if (!confirm('Alle Termine löschen?')) return;
-      appointments = [];
-      saveAppointments();
+      saveAllData();
       renderAppointments();
     }
 
+    /** Exports all app data (appointments, transfers, notes) to a drk_data.json file. */
     function exportJSON(){
-      const dataStr = JSON.stringify(appointments,null,2);
+      const dataStr = JSON.stringify({ appointments, transfers, teamNotes },null,2);
       const blob = new Blob([dataStr],{type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'appointments.json'; document.body.appendChild(a); a.click();
+      a.href = url; a.download = 'drk_data.json'; document.body.appendChild(a); a.click();
       a.remove(); URL.revokeObjectURL(url);
     }
     
@@ -540,21 +1213,22 @@
             try {
                 const importedData = JSON.parse(e.target.result);
                 
-                // Assuming the exported file contains only the appointments array
-                if (Array.isArray(importedData)) {
-                    appointments = importedData;
-                } else if (Array.isArray(importedData.appointments)) { 
-                    // Attempt to extract appointments if the file has a different structure
+                // Validate structure and update global variables
+                if (Array.isArray(importedData.appointments)) {
                     appointments = importedData.appointments;
-                } else {
-                    throw new Error("Invalid file structure.");
                 }
-
+                if (Array.isArray(importedData.transfers)) {
+                    transfers = importedData.transfers;
+                }
+                if (typeof importedData.teamNotes === 'string') {
+                    teamNotes = importedData.teamNotes;
+                }
+                
                 // Save the newly imported data to localStorage for persistence
-                saveAppointments();
+                saveAllData();
                 
                 // Update the UI
-                renderAppointments();
+                renderAll();
                 alert('البيانات تم استيرادها بنجاح من الملف!');
                 
             } catch (error) {
@@ -569,13 +1243,18 @@
 
 
     window.addEventListener('load', () => {
-      loadAppointments();
-      // Login is required to see the app
+      loadAllData();
+      
+      loginScreen.style.display = 'flex';
+      mainAppWrap.style.display = 'none';
+      if (pinInput) pinInput.focus();
     });
 
     // close modal by clicking outside
     window.addEventListener('click', e => {
       if (e.target === modal) closeModal();
+      if (e.target === newTransferModal) closeNewTransferModal();
+      if (e.target === notesModal) closeNotesModal(); 
     });
   </script>
 </body>
