@@ -324,7 +324,7 @@
       </div>
     </div>
 
-    <label for="pin">PIN (9001)</label>
+    <label for="pin">PIN eingeben</label>
     <input id="pin" type="password" maxlength="4" required>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
@@ -338,7 +338,7 @@
   </div>
 
   <script>
-    // **التعديل هنا: تغيير بيانات الاعتماد إلى PIN واحد**
+    // بيانات الاعتماد (PIN)
     const VALID_PIN = '9001';
 
     // DOM
@@ -361,13 +361,12 @@
 
     // login flow
     loginBtn.addEventListener('click', checkLogin);
-    // **التعديل هنا: ربط ضغط Enter بحقل PIN**
     const pinInput = document.getElementById('pin');
     if (pinInput) {
         pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
     }
 
-    // **التعديل هنا: منطق التحقق من PIN فقط**
+    // منطق التحقق من PIN فقط
     function checkLogin(){
       const pin = document.getElementById('pin').value.trim();
       if (pin === VALID_PIN){
@@ -385,7 +384,7 @@
       renderAppointments();
     }
 
-    // **التعديل هنا: مسح حقل PIN عند تسجيل الخروج**
+    // مسح حقل PIN عند تسجيل الخروج
     function logout(){
       appArea.setAttribute('aria-hidden','true');
       loginScreen.style.display = 'block';
