@@ -35,8 +35,6 @@
       -moz-osx-font-smoothing:grayscale;
       display:flex;
       justify-content:center;
-      flex-direction: column; 
-      min-height: 100vh;
     }
 
     .wrap{
@@ -46,10 +44,6 @@
       gap:var(--gap);
       align-items:flex-start;
       padding:28px; 
-      flex-grow: 1; 
-      /* Fix for potential top-padding issues on mobile wrap */
-      padding-top: max(18px, env(safe-area-inset-top)); 
-      padding-bottom: max(18px, env(safe-area-inset-bottom));
     }
     
     /* left column */
@@ -69,17 +63,7 @@
       border:1px solid rgba(15,23,42,0.04)
     }
     .card h4{margin:0 0 8px 0;font-size:15px}
-    /* Adjusted stat layout for better wrapping on small screens */
-    .stat{
-      display:flex;
-      gap:12px;
-      flex-wrap: wrap; /* Added for better mobile support */
-      justify-content: space-between; /* Ensures even spacing */
-    }
-    .stat > div { 
-      min-width: 45%; /* Ensures columns wrap nicely on small screens */
-      margin-bottom: 8px;
-    }
+    .stat{display:flex;align-items:center;gap:12px}
     .stat .num{font-weight:700;font-size:20px;color:#07142a}
     .small{font-size:13px;color:var(--muted)}
     
@@ -119,11 +103,7 @@
       gap:10px;
       margin:12px 0 18px 0;
       flex-wrap:wrap;
-      /* Adjusted to place logout/export on their own line on small screens */
     }
-    .controls > div:first-child { flex-grow: 1; display: flex; flex-wrap: wrap; gap: 8px;}
-    .controls > div:last-child { margin-left: auto; display: flex; gap: 8px; }
-
     .btn{
       display:inline-flex;align-items:center;gap:8px;
       padding:10px 14px;border-radius:10px;border:0;cursor:pointer;
@@ -212,7 +192,7 @@
         height: 38px;
     }
     
-    /* Today summary section */
+    /* UPDATED: Today summary section */
     .today{
       display:flex;
       gap:12px;
@@ -324,16 +304,7 @@
     }
     .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
 
-    /* UPDATED: Footer is now outside the wrap in some cases but uses global flex layout */
-    footer.copy{
-        font-size:13px;
-        color:var(--muted);
-        text-align:center;
-        padding:12px 0;
-        width: 100%;
-        max-width: var(--max-width);
-        margin: 0 auto;
-    }
+    footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
 
     /* TAB STYLES */
     .tabs-nav {
@@ -370,7 +341,7 @@
     }
     /* END TAB STYLES */
 
-    /* MODAL STYLES (Mobile Optimization) */
+    /* modal beautiful */
     .modal{
       display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
       background:linear-gradient(180deg,#fff,#fafbff);padding:0;border-radius:14px;z-index:1200;width:520px;
@@ -431,46 +402,25 @@
 
     /* responsive adjustments */
     @media (max-width:1024px){
-      body { min-height: 100vh; }
       .wrap{flex-direction:column;padding:18px}
       .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} 
       .panel{order:0}
       .appointments-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       }
-      footer.copy { padding: 12px 18px; } 
     }
-    
-    /* MODAL FIX & Mobile Optimization */
-    @media (max-width:768px) { 
-        .modal {
-            width: calc(100% - 36px); 
-            top: 20px; /* Position from top, not centered, to ensure full visibility on small screen */
-            left: 50%;
-            transform: translate(-50%, 0); 
-            max-height: calc(100vh - 40px); 
-            border-radius: 8px;
-        }
-        
-        .modal .head { 
-            border-radius: 8px 8px 0 0;
-            padding: 12px;
-        }
-
-        /* Ensure time and date fields stack on smaller screens if they are in a flex container */
-        #newTransferForm > div:has(input[type="date"]){
-            flex-direction: column;
-            gap: 0 !important;
-        }
-        #newTransferForm > div:has(input[type="date"]) input {
-             margin-top: 6px;
-        }
-    }
-
 
     @media (max-width:560px){
+      .modal {
+        width: calc(100% - 36px); 
+        top: 20px; 
+        left: 50%;
+        transform: translate(-50%, 0); 
+        max-height: calc(100vh - 40px); 
+        overflow-y: auto; 
+      }
+
       body{padding:0} 
-      .wrap{padding:14px} /* Adjusted wrap padding for smaller screens */
       .panel{padding:14px;border-radius:10px}
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
@@ -478,17 +428,6 @@
       .side{display:flex; order: 1;} 
       
       #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} 
-      
-      /* Control button adjustments for small screens */
-      .controls { flex-direction: column; gap: 10px; }
-      .controls > div:first-child { flex-direction: column; }
-      .controls > div:last-child { margin-left: 0; justify-content: space-between; }
-      .btn { width: 100%; justify-content: center; }
-      
-      /* Stat cards for very small screens */
-      .stat { gap: 8px; }
-      .stat > div { min-width: 48%; }
-      .stat > div:nth-child(2n) { margin-left: auto; } /* Align 2nd and 4th column right */
     }
 
     /* focus */
@@ -550,7 +489,7 @@
       
       <div class="card" id="statsCard" style="margin-bottom: var(--gap);">
         <h4>Statistiken</h4>
-        <div class="stat">
+        <div class="stat" style="justify-content:space-between">
           <div><div class="num" id="statTotal">0</div><div class="small muted">Gesamt Termine</div></div>
           <div><div class="num" id="statToday">0</div><div class="small muted">Termine Heute</div></div>
           <div><div class="num" id="statTransferTotal">0</div><div class="small muted">Gesamt Transfers</div></div>
@@ -570,7 +509,7 @@
           <button class="btn btn-primary" onclick="openModal()">➕ Neuer Termin</button>
           <button class="btn btn-transfer-new" onclick="openNewTransferModal()">➕ Neuer Transfer</button> 
         </div>
-        <div>
+        <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn btn-ghost" onclick="exportJSON()">🔽 Export</button>
           <button class="btn btn-logout" onclick="logout()">Abmelden</button>
         </div>
@@ -603,7 +542,9 @@
               </div>
           </div>
       </div>
-      </div>
+      <div style="height:12px"></div>
+      <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
+    </div>
 
     <aside class="side" aria-hidden="true">
       <div class="card centered" aria-hidden="false">
@@ -612,8 +553,7 @@
       </div>
     </aside>
   </div>
-  
-  <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
+
   <div class="modal" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="head">
       <div id="modalTitle">Neuer Termin</div>
