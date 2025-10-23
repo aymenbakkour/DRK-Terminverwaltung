@@ -169,9 +169,8 @@
 
     /* login panel */
     #loginScreen{
-      /* تعديل العرض ليكون أصغر قليلاً وأكثر ملائمة للموبايل */
       width:320px; 
-      max-width: 90%; /* إضافة لتكون متناسبة مع شاشات الموبايل الأصغر */
+      max-width: 90%; 
       border-radius:16px;padding:20px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:var(--shadow);
       border:1px solid rgba(15,23,42,0.04);
     }
@@ -179,7 +178,6 @@
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
     #loginScreen input{
       width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);
-      /* تحسين حجم الخط قليلاً ليسهل على الموبايل */
       font-size: 16px;
     }
 
@@ -205,7 +203,7 @@
       td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
       td.actions{display:flex;gap:8px}
       .modal{width:94%}
-      #loginScreen{width:90%;border-radius:10px} /* تعديل العرض على الشاشات الأصغر */
+      #loginScreen{width:90%;border-radius:10px}
     }
 
     /* focus */
@@ -228,6 +226,9 @@
           <button class="btn btn-primary" onclick="openModal()">➕ Neuer Termin</button>
         </div>
         <div style="margin-left:auto;display:flex;gap:8px">
+          <label for="importFile" class="btn btn-ghost" style="cursor:pointer; margin:0; display:inline-flex; align-items:center">⬆️ Import</label>
+          <input type="file" id="importFile" accept="application/json" style="display:none;">
+
           <button class="btn btn-ghost" onclick="exportJSON()">🔽 Export</button>
           <button class="btn btn-logout" onclick="logout()">Abmelden</button>
         </div>
@@ -360,6 +361,9 @@
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
+    
+    // متغير جديد لـ Import
+    const importFile = document.getElementById('importFile'); 
 
     let appointments = [];
 
@@ -376,7 +380,6 @@
     // منطق التحقق من PIN فقط
     function checkLogin(){
       const pin = document.getElementById('pin').value.trim();
-      // إضافة تحقق من أن الكود هو 4 أرقام
       if (pin.length !== 4) {
          loginError.textContent = 'Bitte geben Sie 4 Ziffern ein.';
          return;
@@ -509,6 +512,50 @@
       a.href = url; a.download = 'appointments.json'; document.body.appendChild(a); a.click();
       a.remove(); URL.revokeObjectURL(url);
     }
+    
+    // **********************************************
+    // وظيفة استيراد ملف JSON الجديدة
+    // **********************************************
+    importFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                
+                // تحقق مبدئي من البيانات
+                if (!Array.isArray(data)) {
+                    alert('Fehler: Die importierte Datei ist keine gültige JSON-Liste von Terminen.');
+                    return;
+                }
+
+                // تنظيف البيانات والتأكد من وجود الحقول الأساسية قبل الإضافة
+                const validAppointments = data.map(item => ({
+                    firstName: item.firstName ? String(item.firstName).trim() : '',
+                    lastName: item.lastName ? String(item.lastName).trim() : '',
+                    room: item.room ? String(item.room).trim() : '',
+                    address: item.address ? String(item.address).trim() : '',
+                    date: item.date ? String(item.date) : '',
+                    time: item.time ? String(item.time) : '',
+                })).filter(a => a.firstName && a.date); // قبول السجلات التي تحتوي على اسم وتاريخ على الأقل
+
+                appointments = [...appointments, ...validAppointments]; // إضافة البيانات الجديدة
+                saveAppointments();
+                renderAppointments();
+                alert(`${validAppointments.length} Termine erfolgreich importiert und hinzugefügt.`);
+
+            } catch (error) {
+                alert('Fehler beim Lesen oder Parsen der JSON-Datei.');
+                console.error(error);
+            }
+        };
+        reader.readAsText(file);
+        // مسح قيمة الإدخال للسماح بتحميل نفس الملف مرة أخرى
+        e.target.value = ''; 
+    });
+
 
     window.addEventListener('load', () => {
       loadAppointments();
