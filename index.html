@@ -26,19 +26,17 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
+    /* UPDATED: Full white background, no gradients, no padding on body */
     body{
       font-family:var(--mono);
       margin:0;
-      background:
-        radial-gradient(1000px 600px at 10% 10%, rgba(0,120,212,0.06), transparent 12%),
-        radial-gradient(800px 500px at 90% 90%, rgba(185,28,28,0.04), transparent 12%),
-        var(--bg);
+      background: #ffffff; 
       color:#0f172a;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:28px;
       display:flex;
       justify-content:center;
+      align-items: center; /* Center content vertically and horizontally for login screen */
     }
 
     .wrap{
@@ -47,8 +45,9 @@
       display:flex;
       gap:var(--gap);
       align-items:flex-start;
+      padding:28px; /* Added padding here for the main app content */
     }
-
+    
     /* left column */
     .panel{
       flex:1 1 680px;
@@ -100,7 +99,7 @@
     .btn-logout{
       background:#fff;border:1px solid rgba(15,23,42,0.06);color:var(--muted);
     }
-
+    
     /* Transfer specific styles */
     .btn-transfer-new { 
         background: linear-gradient(90deg, #10b981, #059669); 
@@ -214,11 +213,32 @@
     .modal .foot{padding:12px;text-align:right;border-top:1px solid rgba(15,23,42,0.03)}
     .modal button{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
 
-    /* login panel */
+    /* login panel - UPDATED for full screen white background */
     #loginScreen{
-      width:420px;border-radius:16px;padding:20px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:var(--shadow);
-      border:1px solid rgba(15,23,42,0.04);
+      width:100%;
+      height:100vh;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:1300;
+      /* Style the inner content for centering */
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background: #ffffff; /* Explicitly white background */
     }
+    
+    /* Inner content card within the full screen */
+    #loginCard {
+        width:420px;
+        border-radius:16px;
+        padding:20px;
+        background:var(--card);
+        box-shadow:var(--shadow);
+        border:1px solid rgba(15,23,42,0.04);
+    }
+
     #loginScreen h2{margin:0 0 8px 0}
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
     #loginScreen input{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06)}
@@ -233,7 +253,7 @@
     }
 
     @media (max-width:560px){
-      body{padding:14px}
+      body{padding:0} /* Removed body padding to allow full screen login */
       .panel{padding:14px;border-radius:10px}
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
@@ -245,7 +265,7 @@
       td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
       td.actions{display:flex;gap:8px}
       .modal{width:94%}
-      #loginScreen{width:100%;border-radius:10px}
+      #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} /* Simplified login card on small screen */
     }
 
     /* focus */
@@ -253,7 +273,32 @@
   </style>
 </head>
 <body>
-  <div class="wrap" role="main">
+  
+  <div id="loginScreen">
+    <div id="loginCard">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
+        <div>
+            <h2 style="margin:0">Login erforderlich</h2>
+            <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
+        </div>
+        </div>
+
+        <label for="pin">PIN eingeben</label>
+        <input id="pin" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+        <div class="small muted"></div>
+        <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" id="loginBtn">Einloggen</button>
+        </div>
+        </div>
+
+        <div id="loginError" class="small" style="color:var(--danger);margin-top:10px;min-height:18px"></div>
+    </div>
+  </div>
+
+  <div class="wrap" role="main" style="display:none;" id="mainAppWrap"> 
     <div class="panel" id="appArea" aria-hidden="true">
       <header class="app-header">
         <div class="logo">DRK</div>
@@ -322,6 +367,7 @@
           <div class="small muted" id="currentTime">Uhrzeit wird geladen...</div>
         </div>
       </div>
+      
       <div class="card">
           <h4>Letzte Transfers</h4>
           <div id="latestTransfers">
@@ -330,6 +376,8 @@
               </ul>
           </div>
       </div>
+
+
       <div class="card centered" aria-hidden="false">
         <div style="font-size:36px;font-weight:800;color:var(--accent)">❤️</div>
         <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Terminverwaltung.</div>
@@ -435,37 +483,16 @@
       </form>
     </div>
   </div>
-  <div id="loginScreen" class="card" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1300">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
-      <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
-      <div>
-        <h2 style="margin:0">Login erforderlich</h2>
-        <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
-      </div>
-    </div>
-
-    <label for="pin">PIN eingeben</label>
-    <input id="pin" type="password" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-      <div class="small muted"></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary" id="loginBtn">Einloggen</button>
-      </div>
-    </div>
-
-    <div id="loginError" class="small" style="color:var(--danger);margin-top:10px;min-height:18px"></div>
-  </div>
-
   <script>
     // Credentials (keine Anzeige im UI)
-    const VALID_PIN = '9001'; // Reverted to PIN
+    const VALID_PIN = '9001'; 
 
     // DOM
     const loginScreen = document.getElementById('loginScreen');
     const loginBtn = document.getElementById('loginBtn');
     const loginError = document.getElementById('loginError');
     const appArea = document.getElementById('appArea');
+    const mainAppWrap = document.getElementById('mainAppWrap'); // Reference to the main app container
     const appointmentList = document.getElementById('appointmentList');
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
@@ -481,7 +508,7 @@
     const newBewohnerListContainer = document.getElementById('newBewohnerListContainer'); 
     const currentDateElement = document.getElementById('currentDate');
     const currentTimeElement = document.getElementById('currentTime');
-    const pinInput = document.getElementById('pin'); // Added PIN input reference
+    const pinInput = document.getElementById('pin'); 
 
 
     let appointments = [];
@@ -492,7 +519,6 @@
     
     // --- Login Flow ---
     loginBtn.addEventListener('click', checkLogin);
-    // Use the correct PIN input element for Enter key listener
     if (pinInput) { pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() }); } 
 
     function checkLogin(){
@@ -501,13 +527,13 @@
         loginError.textContent = '';
         openApp();
       } else {
-        // Updated error message
         loginError.textContent = 'Falscher PIN.'; 
       }
     }
 
     function openApp(){
       loginScreen.style.display = 'none';
+      mainAppWrap.style.display = 'flex'; // Show the main app content
       appArea.setAttribute('aria-hidden','false');
       loadAppointments();
       loadTransfers(); 
@@ -519,10 +545,12 @@
 
     function logout(){
       appArea.setAttribute('aria-hidden','true');
-      loginScreen.style.display = 'block';
+      mainAppWrap.style.display = 'none'; // Hide the main app content
+      loginScreen.style.display = 'flex'; // Show the login screen
       const pinInput = document.getElementById('pin');
-      if (pinInput) pinInput.value = ''; // Clear PIN input
+      if (pinInput) pinInput.value = ''; 
       loginError.textContent = '';
+      if (pinInput) pinInput.focus();
     }
 
     // --- Storage ---
@@ -816,8 +844,13 @@
     }
 
     window.addEventListener('load', () => {
+      // Initialize on load, but keep main app hidden
       loadAppointments();
       loadTransfers(); 
+      // Ensure the login screen is visible and main app is hidden initially
+      loginScreen.style.display = 'flex';
+      mainAppWrap.style.display = 'none';
+      if (pinInput) pinInput.focus();
     });
 
     // close modal by clicking outside
