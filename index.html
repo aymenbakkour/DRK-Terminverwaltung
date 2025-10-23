@@ -192,6 +192,7 @@
         height: 38px;
     }
     
+    /* UPDATED: Today summary section */
     .today{
       display:flex;
       gap:12px;
@@ -495,7 +496,13 @@
           <div><div class="num" id="statTransferToday">0</div><div class="small muted">Transfers Heute</div></div>
         </div>
       </div>
-
+      
+      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
+        <div class="today-card">
+          <h3>Heutige Termine</h3>
+          <ul id="todayAppointments" class="muted"></ul>
+        </div>
+      </div>
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
           <button class="btn btn-notes-new" onclick="openNotesModal()">➕ Notizen (Team)</button>
@@ -518,12 +525,6 @@
           <div id="tab-notes" class="tab-pane">
               <div id="teamNotesDisplay">
                 </div>
-              <div class="today" id="todaySummary" style="margin-bottom: 0;">
-                <div class="today-card">
-                  <h3>Heute</h3>
-                  <ul id="todayAppointments" class="muted"></ul>
-                </div>
-              </div>
               </div>
 
           <div id="tab-transfers" class="tab-pane">
@@ -801,6 +802,7 @@
             emptyMessage.textContent = 'Keine Termine vorhanden';
             appointmentList.appendChild(emptyMessage);
             
+            // Moved this logic outside the tab-notes section
             if (todayAppointments.children.length === 0) {
                  todayAppointments.innerHTML = `<li style="list-style: none; margin-left: -16px;">Keine Termine für heute</li>`;
             }
