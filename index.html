@@ -84,7 +84,7 @@
       align-items:center;
       margin-bottom:18px;
     }
-    /* UPDATED: Logo style for red cross only */
+    /* Logo style for red cross only */
     .logo{
       width:64px;height:64px;border-radius:12px;
       background: #ffffff; 
@@ -305,6 +305,41 @@
 
     footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
 
+    /* TAB STYLES */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid rgba(15,23,42,0.05);
+      margin-bottom: 18px;
+      padding-bottom: 0;
+    }
+    .tab-btn {
+      padding: 10px 14px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: all var(--transition);
+      margin-bottom: -2px; /* Pull into border */
+    }
+    .tab-btn:hover {
+      color: #07142a;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom: 3px solid var(--accent);
+    }
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    /* END TAB STYLES */
+
     /* modal beautiful */
     .modal{
       display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -473,22 +508,37 @@
         </div>
       </div>
       
-      <div id="teamNotesDisplay">
-        </div>
-      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
-        <div class="today-card">
-          <h3>Heute</h3>
-          <ul id="todayAppointments" class="muted"></ul>
-        </div>
-      </div>
-      <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 20px;">
-        <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
-        <div class="appointments-grid" id="transferListGrid">
-          </div>
+      <div class="tabs-nav">
+          <button class="tab-btn" id="btn-notes" onclick="switchTab('tab-notes', this)">Team Notizen</button>
+          <button class="tab-btn" id="btn-transfers" onclick="switchTab('tab-transfers', this)">Transfers</button>
+          <button class="tab-btn active" id="btn-appointments" onclick="switchTab('tab-appointments', this)">Termine</button>
       </div>
       
-      <div class="table-wrap" role="region" aria-label="Termin-Karten">
-        <div class="appointments-grid" id="appointmentList">
+      <div class="tabs-content">
+          <div id="tab-notes" class="tab-pane">
+              <div id="teamNotesDisplay">
+                </div>
+              <div class="today" id="todaySummary" style="margin-bottom: 0;">
+                <div class="today-card">
+                  <h3>Heute</h3>
+                  <ul id="todayAppointments" class="muted"></ul>
+                </div>
+              </div>
+              </div>
+
+          <div id="tab-transfers" class="tab-pane">
+              <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 0;">
+                <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
+                <div class="appointments-grid" id="transferListGrid">
+                  </div>
+              </div>
+          </div>
+
+          <div id="tab-appointments" class="tab-pane active">
+              <div class="table-wrap" role="region" aria-label="Termin-Karten">
+                <div class="appointments-grid" id="appointmentList">
+                  </div>
+              </div>
           </div>
       </div>
       <div style="height:12px"></div>
@@ -613,6 +663,8 @@
     const notesModal = document.getElementById('notesModal');
     const notesForm = document.getElementById('notesForm');
     const teamNotesDisplay = document.getElementById('teamNotesDisplay');
+    // Tab DOM elements
+    const btnAppointments = document.getElementById('btn-appointments');
 
 
     let appointments = [];
@@ -648,6 +700,8 @@
       renderNotes(); 
       updateDateTime();
       setInterval(updateDateTime, 1000);
+      // Ensure the default tab is active on load
+      switchTab('tab-appointments', btnAppointments);
     }
 
     function logout(){
@@ -660,6 +714,18 @@
       if (pinInput) pinInput.focus();
     }
 
+    // --- Tab Switching Logic ---
+    function switchTab(tabId, button) {
+        // 1. Hide all panes
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        // 2. Deactivate all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        // 3. Show the target pane
+        document.getElementById(tabId).classList.add('active');
+        // 4. Activate the clicked button
+        button.classList.add('active');
+    }
+    
     // --- Storage ---
     function loadAppointments(){
       const raw = localStorage.getItem('appointments') || '[]';
