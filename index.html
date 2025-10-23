@@ -128,15 +128,15 @@
         height: 38px;
     }
     
-    /* Removed old list styles for transfers */
-
     .today{
       display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;
     }
     .today .today-card{
       flex:1;
       background:linear-gradient(180deg, rgba(0,120,212,0.06), rgba(255,255,255,0.6));
-      padding:14px;border-radius:12px;border:1px solid rgba(7,89,133,0.06);
+      padding:14px;
+      border-radius:12px;
+      border:1px solid rgba(7,89,133,0.06);
       min-height:64px;
     }
     .today .today-card h3{margin:0;font-size:13px;color:var(--accent-2)}
@@ -212,7 +212,7 @@
     .edit { background:linear-gradient(90deg,#06b6d4,#0ea5e9); color:#fff }
     .del { background:linear-gradient(90deg,#f97316,#ef4444); color:#fff }
 
-    /* TRANSFER CARDS (Sidebar) */
+    /* TRANSFER CARDS (Sidebar) - UPDATED COLOR */
     .transfer-cards-container {
         display: flex;
         flex-direction: column;
@@ -221,8 +221,9 @@
     .transfer-card {
         padding: 10px;
         border-radius: 8px;
-        background: rgba(16, 185, 129, 0.08); /* light green background */
-        border-left: 4px solid var(--success);
+        /* Custom color for clear distinction */
+        background: #e0f7f4; /* Light mint/teal background */
+        border-left: 4px solid #00a896; /* Darker teal border */
         font-size: 13px;
     }
     .transfer-card .bewohner-info {
@@ -233,10 +234,6 @@
     .transfer-card .datetime-info {
         color: var(--muted);
     }
-
-
-    /* Removed all table-specific CSS: table, thead, tbody, td, th */
-
 
     /* right column */
     .side{
@@ -467,38 +464,6 @@
     </div>
   </div>
   
-  <div class="modal" id="transferModal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
-    <div class="head">
-      <div id="transferModalTitle">Bewohnertransfer (Aus Termin)</div> 
-      <button onclick="closeTransferModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
-    </div>
-    <div class="body">
-      <form id="transferForm">
-        <input type="hidden" id="transferIndex">
-        
-        <label>Übertragener Bewohner</label>
-        <div class="patient-entry">
-            <input type="text" id="transferName" placeholder="Name" readonly>
-            <input type="text" id="transferRoom" placeholder="Zimmer" readonly>
-            <button type="button" style="visibility:hidden" disabled class="remove-btn">✕</button>
-        </div>
-        <label for="transferDate">Datum</label>
-        <input id="transferDate" type="date" readonly>
-
-        <label for="transferTime">Uhrzeit</label>
-        <input id="transferTime" type="time" readonly>
-
-        <label for="transferNotes">Bemerkungen/Notizen</label>
-        <textarea id="transferNotes" style="min-height:100px;resize:vertical;" placeholder="Geben Sie hier zusätzliche Bemerkungen zum Transfer ein."></textarea>
-        
-        <div class="foot">
-          <button type="button" onclick="closeTransferModal()" class="btn btn-ghost">Abbrechen</button>
-          <button type="submit" class="btn btn-primary transfer-btn">Transfer speichern</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <div class="modal" id="newTransferModal" role="dialog" aria-modal="true" aria-labelledby="newTransferModalTitle">
     <div class="head">
       <div id="newTransferModalTitle">Neuer Bewohnertransfer eintragen</div> 
@@ -540,7 +505,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const loginError = document.getElementById('loginError');
     const appArea = document.getElementById('appArea');
-    const mainAppWrap = document.getElementById('mainAppWrap'); // Reference to the main app container
+    const mainAppWrap = document.getElementById('mainAppWrap'); 
     const appointmentList = document.getElementById('appointmentList'); // Now the grid container
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
@@ -548,8 +513,7 @@
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
-    const transferModal = document.getElementById('transferModal');
-    const transferForm = document.getElementById('transferForm');
+    // Removed: transferModal, transferForm
     const newTransferModal = document.getElementById('newTransferModal');
     const newTransferForm = document.getElementById('newTransferForm');
     const transferList = document.getElementById('transferList'); // Now the transfer card container
@@ -654,9 +618,8 @@
                 <div class="card-actions">
                     <button class="edit btn" onclick="openModal(${i})">Bearbeiten</button>
                     <button class="del btn" onclick="deleteAppointment(${i})">Löschen</button>
-                    <button class="btn transfer-btn" onclick="openTransferModal(${i})">Transfer</button>
                 </div>
-            `;
+            `; // REMOVED Transfer button
             appointmentList.appendChild(card);
 
             // --- 2. Create Today's List Item ---
@@ -827,48 +790,6 @@
         return bewohner; 
     }
 
-    // --- Contextual Transfer Modal (from Appointment) ---
-    function openTransferModal(index){
-        const a = appointments[index];
-        document.getElementById('transferIndex').value = index;
-        
-        const nameInput = document.getElementById('transferName');
-        const roomInput = document.getElementById('transferRoom');
-        nameInput.value = `${a.firstName || ''} ${a.lastName || ''}`;
-        roomInput.value = a.room || '';
-
-        document.getElementById('transferDate').value = a.date || '';
-        document.getElementById('transferTime').value = a.time || '';
-        document.getElementById('transferNotes').value = ''; 
-        
-        transferModal.style.display = 'block';
-        document.getElementById('transferNotes').focus();
-    }
-
-    function closeTransferModal(){ transferModal.style.display = 'none' }
-
-    transferForm.addEventListener('submit', e => {
-        e.preventDefault();
-        
-        const t = {
-            timestamp: new Date().toISOString(),
-            date: document.getElementById('transferDate').value,
-            time: document.getElementById('transferTime').value,
-            notes: document.getElementById('transferNotes').value.trim() || 'Keine Notizen',
-            bewohner: [{ 
-                name: document.getElementById('transferName').value,
-                room: document.getElementById('transferRoom').value
-            }]
-        };
-        
-        transfers.push(t); 
-        saveTransfers();
-        renderTransfers();
-
-        alert(`Transfer für ${t.bewohner[0].name} (Aus Termin) erfolgreich gespeichert!`); 
-        closeTransferModal();
-    });
-
     // --- New Transfer Modal (Multiple Residents) ---
     function openNewTransferModal(){
         newTransferForm.reset();
@@ -938,7 +859,6 @@
     // close modal by clicking outside
     window.addEventListener('click', e => {
       if (e.target === modal) closeModal();
-      if (e.target === transferModal) closeTransferModal();
       if (e.target === newTransferModal) closeNewTransferModal();
     });
   </script>
