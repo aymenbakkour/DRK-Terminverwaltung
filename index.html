@@ -207,7 +207,6 @@
 </head>
 <body>
   <div class="wrap" role="main">
-    <!-- LEFT: App -->
     <div class="panel" id="appArea" aria-hidden="true">
       <header class="app-header">
         <div class="logo">DRK</div>
@@ -259,7 +258,6 @@
       <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
     </div>
 
-    <!-- RIGHT: Sidebar -->
     <aside class="side" aria-hidden="true">
       <div class="card">
         <h4>Statistiken</h4>
@@ -283,7 +281,6 @@
     </aside>
   </div>
 
-  <!-- Modal -->
   <div class="modal" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="head">
       <div id="modalTitle">Neuer Termin</div>
@@ -318,21 +315,17 @@
     </div>
   </div>
 
-  <!-- Login Modal-like centered card -->
   <div id="loginScreen" class="card" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1300">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
       <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800">DRK</div>
       <div>
         <h2 style="margin:0">Login erforderlich</h2>
-        <div class="small muted">Bitte mit Benutzername und Passwort anmelden</div>
+        <div class="small muted">Bitte mit Ihrem 4-stelligen PIN anmelden</div>
       </div>
     </div>
 
-    <label for="username">Benutzername</label>
-    <input id="username" type="text" autocomplete="username">
-
-    <label for="password">Passwort</label>
-    <input id="password" type="password" autocomplete="current-password">
+    <label for="pin">PIN (9001)</label>
+    <input id="pin" type="password" maxlength="4" required>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
       <div class="small muted"></div>
@@ -345,9 +338,8 @@
   </div>
 
   <script>
-    // Credentials (keine Anzeige im UI)
-    const VALID_USERNAME = 'admin';
-    const VALID_PASSWORD = 'drk2025';
+    // **التعديل هنا: تغيير بيانات الاعتماد إلى PIN واحد**
+    const VALID_PIN = '9001';
 
     // DOM
     const loginScreen = document.getElementById('loginScreen');
@@ -369,17 +361,20 @@
 
     // login flow
     loginBtn.addEventListener('click', checkLogin);
-    document.getElementById('password').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
-    document.getElementById('username').addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
+    // **التعديل هنا: ربط ضغط Enter بحقل PIN**
+    const pinInput = document.getElementById('pin');
+    if (pinInput) {
+        pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() });
+    }
 
+    // **التعديل هنا: منطق التحقق من PIN فقط**
     function checkLogin(){
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value;
-      if (u === VALID_USERNAME && p === VALID_PASSWORD){
+      const pin = document.getElementById('pin').value.trim();
+      if (pin === VALID_PIN){
         loginError.textContent = '';
         openApp();
       } else {
-        loginError.textContent = 'Falscher Benutzername oder Passwort.';
+        loginError.textContent = 'Falscher PIN.';
       }
     }
 
@@ -390,11 +385,12 @@
       renderAppointments();
     }
 
+    // **التعديل هنا: مسح حقل PIN عند تسجيل الخروج**
     function logout(){
       appArea.setAttribute('aria-hidden','true');
       loginScreen.style.display = 'block';
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
+      const pinInput = document.getElementById('pin'); 
+      if (pinInput) pinInput.value = ''; 
       loginError.textContent = '';
     }
 
@@ -514,4 +510,3 @@
   </script>
 </body>
 </html>
-```
