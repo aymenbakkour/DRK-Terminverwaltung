@@ -35,7 +35,7 @@
       -moz-osx-font-smoothing:grayscale;
       display:flex;
       justify-content:center;
-      flex-direction: column; /* Allows content wrap and footer at bottom */
+      flex-direction: column; 
       min-height: 100vh;
     }
 
@@ -46,7 +46,7 @@
       gap:var(--gap);
       align-items:flex-start;
       padding:28px; 
-      flex-grow: 1; /* Pushes footer down */
+      flex-grow: 1; 
     }
     
     /* left column */
@@ -423,17 +423,26 @@
       }
       footer.copy { padding: 12px 18px; } 
     }
+    
+    /* NEW: Modal responsiveness for tablets and phones */
+    @media (max-width:768px) { 
+        .modal {
+            width: calc(100% - 36px); 
+            top: 20px; 
+            left: 50%;
+            transform: translate(-50%, 0); 
+            max-height: calc(100vh - 40px); 
+            overflow-y: auto; 
+        }
+        /* Ensure time and date fields stack on smaller screens if they are in a flex container */
+        .modal .body input[type="date"], 
+        .modal .body input[type="time"] {
+            margin-top: 8px; /* Give some margin when stacking */
+        }
+    }
+
 
     @media (max-width:560px){
-      .modal {
-        width: calc(100% - 36px); 
-        top: 20px; 
-        left: 50%;
-        transform: translate(-50%, 0); 
-        max-height: calc(100vh - 40px); 
-        overflow-y: auto; 
-      }
-
       body{padding:0} 
       .panel{padding:14px;border-radius:10px}
       header.app-header{gap:10px}
