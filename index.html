@@ -100,12 +100,43 @@
     .btn-logout{
       background:#fff;border:1px solid rgba(15,23,42,0.06);color:var(--muted);
     }
-    /* تنسيق زر Transfer الجديد في الكنترول */
+
+    /* Transfer specific styles */
     .btn-transfer-new { 
         background: linear-gradient(90deg, #10b981, #059669); 
         color: #fff; 
         box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); 
     }
+    .transfer-btn{ 
+        background: linear-gradient(90deg, #10b981, #059669); 
+        color: #fff; 
+    }
+    .patient-entry { 
+        display: grid;
+        grid-template-columns: 1fr 80px 30px; 
+        gap: 8px;
+        align-items: flex-end;
+        margin-top: 10px;
+    }
+    .patient-entry .remove-btn {
+        background: var(--danger);
+        color: white;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        height: 38px;
+    }
+    #latestTransfers ul { list-style: none; margin: 0; padding: 0; }
+    #latestTransfers li { 
+        padding: 8px 0; 
+        border-bottom: 1px dashed rgba(15,23,42,0.05); 
+        font-size: 13px; 
+    }
+    #latestTransfers li:last-child { border-bottom: none; }
+    #latestTransfers .name { font-weight: 600; color: #07142a; }
+    #latestTransfers .details { color: var(--muted); display: block; margin-top: 2px; }
 
     .today{
       display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;
@@ -131,11 +162,6 @@
       text-align:left;padding:12px 16px;background:transparent;color:var(--muted);
       font-weight:600;font-size:12px;border-bottom:1px solid rgba(15,23,42,0.04);
     }
-    /* إخفاء رأس عمود Aktionen */
-    thead th:last-child {
-        display: none;
-    }
-    
     tbody tr{
       transition:background var(--transition);border-bottom:1px solid rgba(15,23,42,0.03);
     }
@@ -148,9 +174,6 @@
     td.actions button{padding:8px 10px;border-radius:8px;font-weight:600;border:0;cursor:pointer}
     .edit{background:linear-gradient(90deg,#06b6d4,#0ea5e9);color:#fff}
     .del{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff}
-    /* تنسيق زر Transfer الجديد في قائمة المواعيد */
-    .transfer-btn{ background: linear-gradient(90deg, #10b981, #059669); color: #fff; }
-
 
     /* right column */
     .side{
@@ -165,37 +188,16 @@
     .stat{display:flex;align-items:center;gap:12px}
     .stat .num{font-weight:700;font-size:20px;color:#07142a}
     .small{font-size:13px;color:var(--muted)}
-    
-    /* قائمة التحويلات الأخيرة */
-    #latestTransfers ul { list-style: none; margin: 0; padding: 0; }
-    #latestTransfers li { 
-        padding: 8px 0; 
-        border-bottom: 1px dashed rgba(15,23,42,0.05); 
-        font-size: 13px; 
-    }
-    #latestTransfers li:last-child { border-bottom: none; }
-    #latestTransfers .name { font-weight: 600; color: #07142a; }
-    #latestTransfers .details { color: var(--muted); display: block; margin-top: 2px; }
 
-    /* حقول الإدخال الديناميكية لـ Transfer */
-    .patient-entry { 
-        display: grid;
-        grid-template-columns: 1fr 80px 30px; 
-        gap: 8px;
-        align-items: flex-end;
-        margin-top: 10px;
+    /* Card for Current Date and Time */
+    .card .stat.datetime{
+        flex-direction:column; 
+        align-items:flex-start; 
+        gap:4px;
     }
-    .patient-entry .remove-btn {
-        background: var(--danger);
-        color: white;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-        line-height: 1;
-        height: 38px;
+    .card .stat.datetime .num {
+        font-size: 18px; 
     }
-
 
     footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
 
@@ -230,69 +232,20 @@
       .panel{order:0}
     }
 
-    /* تعديلات الموبايل */
     @media (max-width:560px){
       body{padding:14px}
       .panel{padding:14px;border-radius:10px}
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
       .side{display:none}
-      
-      /* إعداد عرض الجدول للموبايل */
       table, thead, tbody, th, td, tr{display:block}
-      thead{display:none} /* إخفاء رأس الجدول بالكامل */
-      
-      tbody tr{
-        margin-bottom:12px;border-radius:10px;padding:12px;border:1px solid rgba(15,23,42,0.04);background:#fff;
-        display: grid; /* استخدام grid لترتيب العناصر بجمالية */
-        grid-template-columns: 1fr 1fr; /* تقسيم العناصر إلى عمودين */
-        grid-template-areas: 
-          "name name" 
-          "room address"
-          "date time"
-          "actions actions";
-        gap: 10px; /* إضافة مسافة بين العناصر */
-      }
-      
-      /* تخصيص موقع كل خلية في الـ grid */
-      td[data-label="Vorname"] { 
-          grid-area: name; 
-          font-size: 16px; 
-          font-weight: 700; 
-          color: #07142a; 
-          padding-bottom: 0; 
-      }
-      td[data-label="Zimmer"] { grid-area: room; }
-      td[data-label="Adresse"] { grid-area: address; }
-      td[data-label="Datum"] { grid-area: date; }
-      td[data-label="Uhrzeit"] { grid-area: time; }
-      td.actions { 
-        grid-area: actions; 
-        justify-content: flex-start; /* محاذاة الأزرار لليسار */
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed rgba(15,23,42,0.05); /* خط فاصل للأزرار */
-        display: flex; /* لضمان عرض الأزرار أفقياً */
-        gap: 8px;
-      }
-
+      thead{display:none}
+      tbody tr{margin-bottom:12px;border-radius:10px;padding:12px;border:1px solid rgba(15,23,42,0.04);background:#fff}
       td{padding:6px 0}
-      
-      /* إخفاء تسمية Vorname (مطلوب) */
-      td[data-label="Vorname"]:before { content: ""; display: none; }
-      
-      /* إخفاء تسمية Aktionen (مطلوب سابقاً) */
-      td.actions:before { content: ""; display: none; } 
-      
-      /* إبقاء تسميات باقي الحقول */
-      td:before{
-        content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px
-      }
-      
-      .chip { font-size: 14px; } /* تكبير خط الشريحة قليلاً */
-      
+      td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
+      td.actions{display:flex;gap:8px}
       .modal{width:94%}
-      #loginScreen{width:90%;border-radius:10px}
+      #loginScreen{width:100%;border-radius:10px}
     }
 
     /* focus */
@@ -342,7 +295,8 @@
               <th>Adresse</th>
               <th>Datum</th>
               <th>Uhrzeit</th>
-              <th>Aktionen</th> </tr>
+              <th>Aktionen</th>
+            </tr>
           </thead>
           <tbody id="appointmentList"></tbody>
         </table>
@@ -362,6 +316,13 @@
       </div>
       
       <div class="card">
+        <h4>Aktuelles Datum & Uhrzeit</h4>
+        <div class="stat datetime">
+          <div class="num" id="currentDate">Datum wird geladen...</div>
+          <div class="small muted" id="currentTime">Uhrzeit wird geladen...</div>
+        </div>
+      </div>
+      <div class="card">
           <h4>Letzte Transfers</h4>
           <div id="latestTransfers">
               <ul id="transferList">
@@ -369,14 +330,6 @@
               </ul>
           </div>
       </div>
-      <div class="card">
-        <h4>Schnelle Aktionen</h4>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="clearAll()">Alle Termine löschen</button>
-          <button class="btn btn-ghost" onclick="clearAllTransfers()">Alle Transfers löschen</button>
-        </div>
-      </div>
-
       <div class="card centered" aria-hidden="false">
         <div style="font-size:36px;font-weight:800;color:var(--accent)">❤️</div>
         <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Terminverwaltung.</div>
@@ -420,14 +373,14 @@
   
   <div class="modal" id="transferModal" role="dialog" aria-modal="true" aria-labelledby="transferModalTitle">
     <div class="head">
-      <div id="transferModalTitle">Patiententransfer (Aus Termin)</div>
+      <div id="transferModalTitle">Bewohnertransfer (Aus Termin)</div> 
       <button onclick="closeTransferModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
     </div>
     <div class="body">
       <form id="transferForm">
         <input type="hidden" id="transferIndex">
         
-        <label>Übertragener Patient</label>
+        <label>Übertragener Bewohner</label>
         <div class="patient-entry">
             <input type="text" id="transferName" placeholder="Name" readonly>
             <input type="text" id="transferRoom" placeholder="Zimmer" readonly>
@@ -452,7 +405,7 @@
 
   <div class="modal" id="newTransferModal" role="dialog" aria-modal="true" aria-labelledby="newTransferModalTitle">
     <div class="head">
-      <div id="newTransferModalTitle">Neuer Patiententransfer eintragen</div>
+      <div id="newTransferModalTitle">Neuer Bewohnertransfer eintragen</div> 
       <button onclick="closeNewTransferModal()" aria-label="Schließen" style="background:transparent;color:#fff;border:0;font-weight:800;font-size:18px;cursor:pointer">✕</button>
     </div>
     <div class="body">
@@ -464,12 +417,12 @@
             <input id="newTransferTime" type="time" required style="flex:1">
         </div>
 
-        <label style="margin-top:16px;">Patienten (Name und Zimmernummer)</label>
-        <div id="newPatientListContainer">
+        <label style="margin-top:16px;">Bewohner (Name und Zimmernummer)</label>
+        <div id="newBewohnerListContainer">
             </div>
 
-        <button type="button" class="btn btn-ghost" onclick="addPatientField('newPatientListContainer')">
-            ➕ Patient hinzufügen
+        <button type="button" class="btn btn-ghost" onclick="addBewohnerField('newBewohnerListContainer')">
+            ➕ Bewohner hinzufügen
         </button>
 
         <label for="newTransferNotes">Bemerkungen/Notizen</label>
@@ -505,8 +458,8 @@
   </div>
 
   <script>
-    // بيانات الاعتماد (PIN)
-    const VALID_PIN = '9001';
+    // Credentials (keine Anzeige im UI)
+    const VALID_PIN = '9001'; // Reverted to PIN
 
     // DOM
     const loginScreen = document.getElementById('loginScreen');
@@ -525,8 +478,10 @@
     const newTransferModal = document.getElementById('newTransferModal');
     const newTransferForm = document.getElementById('newTransferForm');
     const transferList = document.getElementById('transferList');
-    const pinInput = document.getElementById('pin'); 
-    const newPatientListContainer = document.getElementById('newPatientListContainer');
+    const newBewohnerListContainer = document.getElementById('newBewohnerListContainer'); 
+    const currentDateElement = document.getElementById('currentDate');
+    const currentTimeElement = document.getElementById('currentTime');
+    const pinInput = document.getElementById('pin'); // Added PIN input reference
 
 
     let appointments = [];
@@ -537,17 +492,18 @@
     
     // --- Login Flow ---
     loginBtn.addEventListener('click', checkLogin);
-    if (pinInput) { pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() }); }
-    
+    // Use the correct PIN input element for Enter key listener
+    if (pinInput) { pinInput.addEventListener('keydown', e => { if (e.key==='Enter') checkLogin() }); } 
+
     function checkLogin(){
       const pin = document.getElementById('pin').value.trim();
-      if (pin !== VALID_PIN){
-        loginError.textContent = 'Falscher PIN.';
-        return;
+      if (pin === VALID_PIN){
+        loginError.textContent = '';
+        openApp();
+      } else {
+        // Updated error message
+        loginError.textContent = 'Falscher PIN.'; 
       }
-      
-      loginError.textContent = '';
-      openApp();
     }
 
     function openApp(){
@@ -557,13 +513,15 @@
       loadTransfers(); 
       renderAppointments();
       renderTransfers();
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
     }
 
     function logout(){
       appArea.setAttribute('aria-hidden','true');
       loginScreen.style.display = 'block';
       const pinInput = document.getElementById('pin');
-      if (pinInput) pinInput.value = '';
+      if (pinInput) pinInput.value = ''; // Clear PIN input
       loginError.textContent = '';
     }
 
@@ -589,8 +547,8 @@
       appointments.forEach((a,i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td data-label="Vorname">${escapeHtml(a.firstName)} ${escapeHtml(a.lastName)}</td>
-          <td data-label="Nachname" style="display:none">${escapeHtml(a.lastName)}</td>
+          <td data-label="Vorname">${escapeHtml(a.firstName)}</td>
+          <td data-label="Nachname">${escapeHtml(a.lastName)}</td>
           <td data-label="Zimmer"><span class="chip">${escapeHtml(a.room)}</span></td>
           <td data-label="Adresse" class="muted">${escapeHtml(a.address)}</td>
           <td data-label="Datum">${escapeHtml(a.date)}</td>
@@ -628,18 +586,32 @@
         // Display up to 5 latest transfers
         transfers.slice(-5).reverse().forEach(t => {
             const li = document.createElement('li');
+            const bewohnerCount = t.bewohner ? t.bewohner.length : 0; 
             const dateStr = t.date === todayISO() ? 'Heute' : t.date;
-            const patientCount = t.patients ? t.patients.length : 0;
-            const patientInfo = patientCount > 1 
-                ? `${patientCount} Patienten` 
-                : (patientCount === 1 ? `${t.patients[0].name} (${t.patients[0].room})` : 'Unbekannter Patient');
+            
+            const bewohnerInfo = bewohnerCount > 1 
+                ? `${bewohnerCount} Bewohner` 
+                : (bewohnerCount === 1 ? `${t.bewohner[0].name} (${t.bewohner[0].room})` : 'Unbekannter Bewohner');
             
             li.innerHTML = `
-                <div class="name">${patientInfo}</div>
+                <div class="name">${bewohnerInfo}</div>
                 <div class="details">${dateStr}, ${escapeHtml(t.time)} - ${t.notes.substring(0, 30)}...</div>
             `;
             transferList.appendChild(li);
         });
+    }
+
+    // Function to update the date and time display
+    function updateDateTime() {
+      const now = new Date();
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('de-DE', dateOptions);
+
+      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      const timeStr = now.toLocaleTimeString('de-DE', timeOptions);
+
+      if (currentDateElement) currentDateElement.textContent = dateStr;
+      if (currentTimeElement) currentTimeElement.textContent = timeStr;
     }
 
 
@@ -681,19 +653,19 @@
       closeModal();
     });
     
-    // --- Dynamic Patient Fields (Helper) ---
-    function addPatientField(containerId, name = '', room = '', isReadOnly = false) {
+    // --- Dynamic Bewohner Fields (Helper) ---
+    function addBewohnerField(containerId, name = '', room = '', isReadOnly = false) { 
         const container = document.getElementById(containerId);
         const div = document.createElement('div');
         div.className = 'patient-entry';
         
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
-        nameInput.placeholder = 'Patienten Name';
+        nameInput.placeholder = 'Bewohner Name'; 
         nameInput.required = !isReadOnly;
         nameInput.value = name;
         nameInput.readOnly = isReadOnly;
-        nameInput.name = 'patientName'; 
+        nameInput.name = 'bewohnerName'; 
         
         const roomInput = document.createElement('input');
         roomInput.type = 'text';
@@ -701,7 +673,7 @@
         roomInput.required = !isReadOnly;
         roomInput.value = room;
         roomInput.readOnly = isReadOnly;
-        roomInput.name = 'patientRoom'; 
+        roomInput.name = 'bewohnerRoom'; 
         roomInput.style.width = '80px';
 
         const removeButton = document.createElement('button');
@@ -726,24 +698,23 @@
         return { nameInput, roomInput };
     }
 
-    // Function to collect all patient data from a form container
-    function collectPatientData(containerId) {
+    function collectBewohnerData(containerId) { 
         const container = document.getElementById(containerId);
         const entries = container.querySelectorAll('.patient-entry');
-        const patients = [];
+        const bewohner = []; 
 
         entries.forEach(entry => {
-            const nameInput = entry.querySelector('input[name="patientName"]');
-            const roomInput = entry.querySelector('input[name="patientRoom"]');
+            const nameInput = entry.querySelector('input[name="bewohnerName"]'); 
+            const roomInput = entry.querySelector('input[name="bewohnerRoom"]');
             
             if (nameInput.value.trim() && roomInput.value.trim()) {
-                patients.push({
+                bewohner.push({ 
                     name: nameInput.value.trim(),
                     room: roomInput.value.trim()
                 });
             }
         });
-        return patients;
+        return bewohner; 
     }
 
     // --- Contextual Transfer Modal (from Appointment) ---
@@ -751,7 +722,6 @@
         const a = appointments[index];
         document.getElementById('transferIndex').value = index;
         
-        // Populate single read-only entry
         const nameInput = document.getElementById('transferName');
         const roomInput = document.getElementById('transferRoom');
         nameInput.value = `${a.firstName || ''} ${a.lastName || ''}`;
@@ -775,8 +745,7 @@
             date: document.getElementById('transferDate').value,
             time: document.getElementById('transferTime').value,
             notes: document.getElementById('transferNotes').value.trim() || 'Keine Notizen',
-            // Create a patient list with only the one patient from the appointment
-            patients: [{
+            bewohner: [{ 
                 name: document.getElementById('transferName').value,
                 room: document.getElementById('transferRoom').value
             }]
@@ -786,16 +755,16 @@
         saveTransfers();
         renderTransfers();
 
-        alert(`Transfer für ${t.patients[0].name} (Aus Termin) erfolgreich gespeichert!`);
+        alert(`Transfer für ${t.bewohner[0].name} (Aus Termin) erfolgreich gespeichert!`); 
         closeTransferModal();
     });
 
-    // --- New Transfer Modal (Multiple Patients) ---
+    // --- New Transfer Modal (Multiple Residents) ---
     function openNewTransferModal(){
         newTransferForm.reset();
         document.getElementById('newTransferDate').value = todayISO();
-        newPatientListContainer.innerHTML = ''; // Clear previous entries
-        addPatientField('newPatientListContainer'); // Add one starting field
+        newBewohnerListContainer.innerHTML = ''; 
+        addBewohnerField('newBewohnerListContainer'); 
         newTransferModal.style.display = 'block';
         document.getElementById('newTransferDate').focus();
     }
@@ -805,10 +774,10 @@
     newTransferForm.addEventListener('submit', e => {
         e.preventDefault();
         
-        const patients = collectPatientData('newPatientListContainer');
+        const bewohner = collectBewohnerData('newBewohnerListContainer'); 
 
-        if (patients.length === 0) {
-            alert('Bitte mindestens einen Patienten hinzufügen.');
+        if (bewohner.length === 0) {
+            alert('Bitte mindestens einen Bewohner hinzufügen.');
             return;
         }
 
@@ -817,14 +786,14 @@
             date: document.getElementById('newTransferDate').value,
             time: document.getElementById('newTransferTime').value,
             notes: document.getElementById('newTransferNotes').value.trim() || 'Keine Notizen',
-            patients: patients
+            bewohner: bewohner 
         };
         
         transfers.push(t); 
         saveTransfers();
         renderTransfers();
 
-        alert(`Neuer Transfer für ${patients.length} Patienten erfolgreich gespeichert!`);
+        alert(`Neuer Transfer für ${bewohner.length} Bewohner erfolgreich gespeichert!`); 
         closeNewTransferModal();
     });
 
@@ -835,18 +804,6 @@
       appointments.splice(i,1);
       saveAppointments();
       renderAppointments();
-    }
-    function clearAll(){
-      if (!confirm('Alle Termine löschen?')) return;
-      appointments = [];
-      saveAppointments();
-      renderAppointments();
-    }
-    function clearAllTransfers(){
-      if (!confirm('Alle Transfers löschen?')) return;
-      transfers = [];
-      saveTransfers();
-      renderTransfers();
     }
 
     function exportJSON(){
@@ -869,12 +826,6 @@
       if (e.target === transferModal) closeTransferModal();
       if (e.target === newTransferModal) closeNewTransferModal();
     });
-    
-    // Ensure initial patient field is added when newTransferModal is opened for the first time
-    window.onload = function() {
-        loadAppointments();
-        loadTransfers();
-    };
   </script>
 </body>
 </html>
