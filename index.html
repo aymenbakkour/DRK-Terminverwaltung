@@ -127,15 +127,8 @@
         line-height: 1;
         height: 38px;
     }
-    #latestTransfers ul { list-style: none; margin: 0; padding: 0; }
-    #latestTransfers li { 
-        padding: 8px 0; 
-        border-bottom: 1px dashed rgba(15,23,42,0.05); 
-        font-size: 13px; 
-    }
-    #latestTransfers li:last-child { border-bottom: none; }
-    #latestTransfers .name { font-weight: 600; color: #07142a; }
-    #latestTransfers .details { color: var(--muted); display: block; margin-top: 2px; }
+    
+    /* Removed old list styles for transfers */
 
     .today{
       display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;
@@ -149,30 +142,101 @@
     .today .today-card h3{margin:0;font-size:13px;color:var(--accent-2)}
     .today ul{margin:8px 0 0 16px;color:var(--muted);padding:0}
 
-    /* table card */
+    /* CARD-BASED LAYOUT FOR APPOINTMENTS (replacing table) */
     .table-wrap{
-      border-radius:12px;overflow:hidden;border:1px solid rgba(15,23,42,0.04);
-      background:linear-gradient(180deg,#fff,#fbfbfd);
+      border-radius:var(--radius);
+      overflow:visible;
+      border:none;
+      background:none;
+      padding: 0;
     }
-    table{
-      width:100%;border-collapse:collapse;font-size:14px;
+    .appointments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+      gap: 16px;
+      margin-top: 16px;
     }
-    thead th{
-      text-align:left;padding:12px 16px;background:transparent;color:var(--muted);
-      font-weight:600;font-size:12px;border-bottom:1px solid rgba(15,23,42,0.04);
+    .appointment-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,42,0.04);
+      transition: all 0.3s ease;
     }
-    tbody tr{
-      transition:background var(--transition);border-bottom:1px solid rgba(15,23,42,0.03);
+    .appointment-card:hover {
+        box-shadow: 0 10px 30px rgba(18,38,63,0.1);
     }
-    tbody tr:hover{background:linear-gradient(90deg, rgba(7,89,133,0.02), rgba(185,28,28,0.01))}
-    td{padding:14px 16px;vertical-align:middle}
-    .muted{color:var(--muted);font-size:13px}
-    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(15,23,42,0.04);font-size:13px}
 
-    td.actions{display:flex;gap:8px}
-    td.actions button{padding:8px 10px;border-radius:8px;font-weight:600;border:0;cursor:pointer}
-    .edit{background:linear-gradient(90deg,#06b6d4,#0ea5e9);color:#fff}
-    .del{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff}
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(15,23,42,0.05);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .card-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0;
+      line-height: 1;
+    }
+    .card-room {
+      background: rgba(0,120,212,0.1);
+      color: var(--accent-2);
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .card-detail {
+      display: flex;
+      gap: 8px;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .card-label {
+      font-weight: 600;
+      color: var(--muted);
+      min-width: 70px; /* Aligns labels nicely */
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: flex-end;
+    }
+    
+    .edit { background:linear-gradient(90deg,#06b6d4,#0ea5e9); color:#fff }
+    .del { background:linear-gradient(90deg,#f97316,#ef4444); color:#fff }
+
+    /* TRANSFER CARDS (Sidebar) */
+    .transfer-cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .transfer-card {
+        padding: 10px;
+        border-radius: 8px;
+        background: rgba(16, 185, 129, 0.08); /* light green background */
+        border-left: 4px solid var(--success);
+        font-size: 13px;
+    }
+    .transfer-card .bewohner-info {
+        font-weight: 700;
+        color: #07142a;
+        margin-bottom: 2px;
+    }
+    .transfer-card .datetime-info {
+        color: var(--muted);
+    }
+
+
+    /* Removed all table-specific CSS: table, thead, tbody, td, th */
+
 
     /* right column */
     .side{
@@ -250,6 +314,9 @@
       .wrap{flex-direction:column;padding:18px}
       .side{width:100%;flex:0 0 auto;position:static}
       .panel{order:0}
+      .appointments-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
     }
 
     @media (max-width:560px){
@@ -258,14 +325,8 @@
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
       .side{display:none}
-      table, thead, tbody, th, td, tr{display:block}
-      thead{display:none}
-      tbody tr{margin-bottom:12px;border-radius:10px;padding:12px;border:1px solid rgba(15,23,42,0.04);background:#fff}
-      td{padding:6px 0}
-      td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
-      td.actions{display:flex;gap:8px}
-      .modal{width:94%}
-      #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} /* Simplified login card on small screen */
+      /* Card-based layout is responsive by default, but we should simplify the login card */
+      #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} 
     }
 
     /* focus */
@@ -330,23 +391,10 @@
         </div>
       </div>
 
-      <div class="table-wrap" role="region" aria-label="Termintabelle">
-        <table>
-          <thead>
-            <tr>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>Zimmer</th>
-              <th>Adresse</th>
-              <th>Datum</th>
-              <th>Uhrzeit</th>
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody id="appointmentList"></tbody>
-        </table>
+      <div class="table-wrap" role="region" aria-label="Termin-Karten">
+        <div class="appointments-grid" id="appointmentList">
+          </div>
       </div>
-
       <div style="height:12px"></div>
       <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
     </div>
@@ -371,9 +419,9 @@
       <div class="card">
           <h4>Letzte Transfers</h4>
           <div id="latestTransfers">
-              <ul id="transferList">
-                  <li class="small muted">Keine Transfers gespeichert.</li>
-              </ul>
+              <div id="transferList" class="transfer-cards-container">
+                  <div class="small muted" style="padding: 10px 0;">Keine Transfers gespeichert.</div>
+              </div>
           </div>
       </div>
 
@@ -493,7 +541,7 @@
     const loginError = document.getElementById('loginError');
     const appArea = document.getElementById('appArea');
     const mainAppWrap = document.getElementById('mainAppWrap'); // Reference to the main app container
-    const appointmentList = document.getElementById('appointmentList');
+    const appointmentList = document.getElementById('appointmentList'); // Now the grid container
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
     const statToday = document.getElementById('statToday');
@@ -504,7 +552,7 @@
     const transferForm = document.getElementById('transferForm');
     const newTransferModal = document.getElementById('newTransferModal');
     const newTransferForm = document.getElementById('newTransferForm');
-    const transferList = document.getElementById('transferList');
+    const transferList = document.getElementById('transferList'); // Now the transfer card container
     const newBewohnerListContainer = document.getElementById('newBewohnerListContainer'); 
     const currentDateElement = document.getElementById('currentDate');
     const currentTimeElement = document.getElementById('currentTime');
@@ -567,53 +615,86 @@
     function saveTransfers(){ localStorage.setItem('transfers', JSON.stringify(transfers)) }
 
 
-    // --- Rendering ---
+    // --- Rendering Appointments as Cards ---
     function renderAppointments(){
-      appointmentList.innerHTML = '';
-      todayAppointments.innerHTML = '';
-      const today = todayISO();
-      appointments.forEach((a,i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td data-label="Vorname">${escapeHtml(a.firstName)}</td>
-          <td data-label="Nachname">${escapeHtml(a.lastName)}</td>
-          <td data-label="Zimmer"><span class="chip">${escapeHtml(a.room)}</span></td>
-          <td data-label="Adresse" class="muted">${escapeHtml(a.address)}</td>
-          <td data-label="Datum">${escapeHtml(a.date)}</td>
-          <td data-label="Uhrzeit">${escapeHtml(a.time)}</td>
-          <td data-label="Aktionen" class="actions">
-            <button class="edit" onclick="openModal(${i})">Bearbeiten</button>
-            <button class="del" onclick="deleteAppointment(${i})">Löschen</button>
-            <button class="btn transfer-btn" onclick="openTransferModal(${i})">Transfer</button>
-          </td>
-        `;
-        appointmentList.appendChild(tr);
-        if (a.date === today){
-          const li = document.createElement('li');
-          li.textContent = `${a.firstName} ${a.lastName} (${a.room}) um ${a.time} — ${a.address}`;
-          todayAppointments.appendChild(li);
+        const today = todayISO();
+        const todayCount = appointments.filter(a => a.date === today).length;
+        
+        // Clear containers
+        appointmentList.innerHTML = ''; // This is the appointments-grid
+        todayAppointments.innerHTML = ''; 
+
+        appointments.forEach((a, i) => {
+            // --- 1. Create Appointment Card (main list) ---
+            const card = document.createElement('div');
+            card.className = 'appointment-card';
+            // Add a highlight class for today's appointments
+            if (a.date === today) {
+                card.style.border = '1px solid var(--accent-2)';
+                card.style.boxShadow = '0 6px 16px rgba(0,120,212,0.1)';
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <h4 class="card-name">${escapeHtml(a.firstName)} ${escapeHtml(a.lastName)}</h4>
+                    <span class="card-room">${escapeHtml(a.room)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Datum:</span>
+                    <span>${escapeHtml(a.date)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Uhrzeit:</span>
+                    <span>${escapeHtml(a.time)}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Adresse:</span>
+                    <span class="muted" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${escapeHtml(a.address)}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="edit btn" onclick="openModal(${i})">Bearbeiten</button>
+                    <button class="del btn" onclick="deleteAppointment(${i})">Löschen</button>
+                    <button class="btn transfer-btn" onclick="openTransferModal(${i})">Transfer</button>
+                </div>
+            `;
+            appointmentList.appendChild(card);
+
+            // --- 2. Create Today's List Item ---
+            if (a.date === today){
+              const li = document.createElement('li');
+              li.textContent = `${a.firstName} ${a.lastName} (${a.room}) um ${a.time}`;
+              todayAppointments.appendChild(li);
+            }
+        });
+
+        // Update stats and quick info
+        statTotal.textContent = appointments.length;
+        statToday.textContent = todayCount;
+        quickInfo.textContent = appointments.length ? `${appointments.length} Termine insgesamt` : 'Keine Termine vorhanden';
+        
+        // Handle empty list case (Updated for card layout)
+        if (!appointments.length) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.style.textAlign = 'center';
+            emptyMessage.style.padding = '18px';
+            emptyMessage.style.color = 'var(--muted)';
+            emptyMessage.textContent = 'Keine Termine vorhanden';
+            appointmentList.appendChild(emptyMessage);
         }
-      });
-      statTotal.textContent = appointments.length;
-      statToday.textContent = appointments.filter(a => a.date === todayISO()).length;
-      quickInfo.textContent = appointments.length ? `${appointments.length} Termine insgesamt` : 'Keine Termine vorhanden';
-      if (!appointments.length){
-        const r = document.createElement('tr');
-        r.innerHTML = `<td colspan="7" style="text-align:center;padding:18px;color:var(--muted)">Keine Termine</td>`;
-        appointmentList.appendChild(r);
-      }
     }
     
+    // --- Rendering Transfers as Cards ---
     function renderTransfers(){
-        transferList.innerHTML = '';
+        transferList.innerHTML = ''; // This is the transfer-cards-container
         if (transfers.length === 0) {
-            transferList.innerHTML = `<li class="small muted">Keine Transfers gespeichert.</li>`;
+            transferList.innerHTML = `<div class="small muted" style="padding: 10px 0;">Keine Transfers gespeichert.</div>`;
             return;
         }
 
         // Display up to 5 latest transfers
         transfers.slice(-5).reverse().forEach(t => {
-            const li = document.createElement('li');
+            const card = document.createElement('div');
+            card.className = 'transfer-card';
             const bewohnerCount = t.bewohner ? t.bewohner.length : 0; 
             const dateStr = t.date === todayISO() ? 'Heute' : t.date;
             
@@ -621,11 +702,12 @@
                 ? `${bewohnerCount} Bewohner` 
                 : (bewohnerCount === 1 ? `${t.bewohner[0].name} (${t.bewohner[0].room})` : 'Unbekannter Bewohner');
             
-            li.innerHTML = `
-                <div class="name">${bewohnerInfo}</div>
-                <div class="details">${dateStr}, ${escapeHtml(t.time)} - ${t.notes.substring(0, 30)}...</div>
+            card.innerHTML = `
+                <div class="bewohner-info">${bewohnerInfo}</div>
+                <div class="datetime-info">${dateStr}, ${escapeHtml(t.time)}</div>
+                <div class="small muted" style="margin-top: 4px; border-top: 1px dashed rgba(15,23,42,0.05); padding-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.notes.substring(0, 50)}</div>
             `;
-            transferList.appendChild(li);
+            transferList.appendChild(card);
         });
     }
 
