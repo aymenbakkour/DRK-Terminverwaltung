@@ -35,6 +35,8 @@
       -moz-osx-font-smoothing:grayscale;
       display:flex;
       justify-content:center;
+      flex-direction: column; /* Allows content wrap and footer at bottom */
+      min-height: 100vh;
     }
 
     .wrap{
@@ -44,6 +46,7 @@
       gap:var(--gap);
       align-items:flex-start;
       padding:28px; 
+      flex-grow: 1; /* Pushes footer down */
     }
     
     /* left column */
@@ -192,7 +195,7 @@
         height: 38px;
     }
     
-    /* UPDATED: Today summary section */
+    /* Today summary section */
     .today{
       display:flex;
       gap:12px;
@@ -304,7 +307,16 @@
     }
     .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
 
-    footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
+    /* UPDATED: Footer is now outside the wrap in some cases but uses global flex layout */
+    footer.copy{
+        font-size:13px;
+        color:var(--muted);
+        text-align:center;
+        padding:12px 0;
+        width: 100%;
+        max-width: var(--max-width);
+        margin: 0 auto;
+    }
 
     /* TAB STYLES */
     .tabs-nav {
@@ -402,12 +414,14 @@
 
     /* responsive adjustments */
     @media (max-width:1024px){
+      body { min-height: 100vh; }
       .wrap{flex-direction:column;padding:18px}
       .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} 
       .panel{order:0}
       .appointments-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       }
+      footer.copy { padding: 12px 18px; } 
     }
 
     @media (max-width:560px){
@@ -542,9 +556,7 @@
               </div>
           </div>
       </div>
-      <div style="height:12px"></div>
-      <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
-    </div>
+      </div>
 
     <aside class="side" aria-hidden="true">
       <div class="card centered" aria-hidden="false">
@@ -553,7 +565,8 @@
       </div>
     </aside>
   </div>
-
+  
+  <footer class="copy small muted">entwickelt von Aymen Bakkour</footer>
   <div class="modal" id="appointmentModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="head">
       <div id="modalTitle">Neuer Termin</div>
