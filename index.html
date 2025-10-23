@@ -26,7 +26,6 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
-    /* UPDATED: Removed vertical centering for the body, allowing content to start from the top */
     body{
       font-family:var(--mono);
       margin:0;
@@ -44,7 +43,7 @@
       display:flex;
       gap:var(--gap);
       align-items:flex-start;
-      padding:28px; /* Added padding here for the main app content */
+      padding:28px; 
     }
     
     /* left column */
@@ -68,7 +67,7 @@
     .stat .num{font-weight:700;font-size:20px;color:#07142a}
     .small{font-size:13px;color:var(--muted)}
     
-    /* Datetime Card styling (used now in the main panel) */
+    /* Datetime Card styling */
     .card .stat.datetime{
         flex-direction:column; 
         align-items:flex-start; 
@@ -107,7 +106,9 @@
       display:inline-flex;align-items:center;gap:8px;
       padding:10px 14px;border-radius:10px;border:0;cursor:pointer;
       transition:all var(--transition);
-      font-weight:600;font-size:14px;
+      font-weight:600;
+      font-size:14px;
+      text-decoration: none; /* Ensure buttons don't have text decoration */
     }
     .btn-ghost{
       background:transparent;border:1px solid rgba(15,23,42,0.06);color:#07142a;
@@ -131,24 +132,27 @@
         color: #fff; 
     }
     
-    /* NEW: Notes specific styles */
+    /* Notes specific styles */
     .btn-notes-new {
-        background: linear-gradient(90deg, #1d9e79, #10b981); /* Darker green/Teal */
+        background: linear-gradient(90deg, #1d9e79, #10b981); 
         color: #fff; 
         box-shadow: 0 8px 20px rgba(29, 158, 121, 0.2); 
     }
     .note-card {
-        background: #fffbe6; /* Light Yellow for notes */
+        background: #fffbe6; 
         border-left: 4px solid #f59e0b;
         padding: 15px;
         border-radius: var(--radius);
         margin-bottom: 16px;
-        white-space: pre-wrap; /* Keeps line breaks */
+        white-space: pre-wrap; 
+        display: flex; 
+        flex-direction: column;
     }
     .note-card h4 {
         margin-top: 0;
-        color: #92400e; /* Brownish color for title */
-        font-size: 16px;
+        margin-bottom: 0;
+        color: #92400e; 
+        font-size: 14px; /* SMALLER HEADING */
     }
     .note-card p {
         margin: 8px 0 0 0;
@@ -156,6 +160,15 @@
         font-size: 14px;
         border-top: 1px dashed rgba(15,23,42,0.05);
         padding-top: 8px;
+        white-space: pre-wrap;
+    }
+    .note-actions { /* NEW: Style for action buttons in note card */
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(15,23,42,0.05);
     }
 
 
@@ -177,18 +190,26 @@
         height: 38px;
     }
     
+    /* NEW LOCATION/SINGLE CARD STYLE */
     .today{
-      display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:18px; /* New location under stats */
     }
     .today .today-card{
-      flex:1;
+      flex:1; /* Takes full width as it is the only card */
       background:linear-gradient(180deg, rgba(0,120,212,0.06), rgba(255,255,255,0.6));
       padding:14px;
       border-radius:12px;
       border:1px solid rgba(7,89,133,0.06);
       min-height:64px;
     }
-    .today .today-card h3{margin:0;font-size:13px;color:var(--accent-2)}
+    .today .today-card h3{
+      margin:0 0 8px 0; 
+      font-size:15px; 
+      color:var(--accent-2);
+    }
     .today ul{margin:8px 0 0 16px;color:var(--muted);padding:0}
 
     /* CARD-BASED LAYOUT FOR APPOINTMENTS/TRANSFERS */
@@ -249,7 +270,7 @@
     .card-label {
       font-weight: 600;
       color: var(--muted);
-      min-width: 70px; /* Aligns labels nicely */
+      min-width: 70px; 
     }
     .card-actions {
       display: flex;
@@ -265,16 +286,14 @@
     .transfer-card {
         border-left: 4px solid #00a896;
     }
-    /* NEW: Light Red Style for Today's Transfer */
     .transfer-card.today-transfer { 
-        background: #fee2e2; /* Light Red */
-        border: 1px solid var(--accent); /* Darker Red Border */
+        background: #fee2e2; 
+        border: 1px solid var(--accent); 
         border-left: 4px solid var(--accent);
     }
     .transfer-card .bewohner-info {
-        color: #07142a; /* Default color for title */
+        color: #07142a; 
     }
-
 
     /* right column (now only contains the small decorative card) */
     .side{
@@ -290,27 +309,26 @@
       display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
       background:linear-gradient(180deg,#fff,#fafbff);padding:0;border-radius:14px;z-index:1200;width:520px;
       box-shadow: 0 30px 80px rgba(6,12,34,0.22);
-      max-height: 90vh; /* Added max height */
-      overflow-y: auto; /* Added overflow for long forms */
+      max-height: 90vh; 
+      overflow-y: auto; 
     }
     .modal .head{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:14px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
     .modal .body{padding:16px}
     .modal label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
     
-    /* FIX: Prevents mobile zoom on input focus by setting font-size to 16px or more */
     .modal input, .modal textarea{
         width:100%;
         padding:10px;
         margin-top:6px;
         border-radius:10px;
         border:1px solid rgba(15,23,42,0.06);
-        font-size:16px; /* CHANGED from 14px to 16px */
+        font-size:16px; 
     }
 
     .modal .foot{padding:12px;text-align:right;border-top:1px solid rgba(15,23,42,0.03)}
     .modal button{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
 
-    /* login panel - UPDATED for full screen white background */
+    /* login panel */
     #loginScreen{
       width:100%;
       height:100vh;
@@ -318,15 +336,13 @@
       top:0;
       left:0;
       z-index:1300;
-      /* Style the inner content for centering */
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      background: #ffffff; /* Explicitly white background */
+      background: #ffffff; 
     }
     
-    /* Inner content card within the full screen */
     #loginCard {
         width:420px;
         border-radius:16px;
@@ -338,20 +354,19 @@
 
     #loginScreen h2{margin:0 0 8px 0}
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
-    /* FIX: Prevents mobile zoom on input focus by setting font-size to 16px or more */
     #loginScreen input{
         width:100%;
         padding:10px;
         margin-top:6px;
         border-radius:10px;
         border:1px solid rgba(15,23,42,0.06);
-        font-size:16px; /* ADDED/CHANGED to 16px */
+        font-size:16px; 
     }
 
     /* responsive adjustments */
     @media (max-width:1024px){
       .wrap{flex-direction:column;padding:18px}
-      .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} /* Moved sidebar (now small) to bottom */
+      .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} 
       .panel{order:0}
       .appointments-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -359,14 +374,13 @@
     }
 
     @media (max-width:560px){
-      /* FIX: Modal responsiveness for mobile */
       .modal {
         width: calc(100% - 36px); 
         top: 20px; 
         left: 50%;
-        transform: translate(-50%, 0); /* Only translate X, pin to top */
-        max-height: calc(100vh - 40px); /* Limit height */
-        overflow-y: auto; /* Enable scrolling for long forms */
+        transform: translate(-50%, 0); 
+        max-height: calc(100vh - 40px); 
+        overflow-y: auto; 
       }
 
       body{padding:0} 
@@ -376,7 +390,6 @@
       
       .side{display:flex; order: 1;} 
       
-      /* Card-based layout is responsive by default, but we should simplify the login card */
       #loginCard{width:100%;border-radius:0;box-shadow:none;border:none;padding:20px} 
     }
 
@@ -415,7 +428,8 @@
       <header class="app-header">
         <div class="logo">DRK</div>
         <div class="title">
-          <h1>EAE DRK-Team</h1> <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
+          <h1>EAE DRK-Team</h1>
+          <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
         </div>
       </header>
       
@@ -436,10 +450,15 @@
         </div>
       </div>
 
+      <div class="today" id="todaySummary" style="margin-bottom: var(--gap);">
+        <div class="today-card">
+          <h3>Heute</h3>
+          <ul id="todayAppointments" class="muted"></ul>
+        </div>
+      </div>
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
           <button class="btn btn-notes-new" onclick="openNotesModal()">➕ Notizen (Team)</button>
-          
           <button class="btn btn-primary" onclick="openModal()">➕ Neuer Termin</button>
           <button class="btn btn-transfer-new" onclick="openNewTransferModal()">➕ Neuer Transfer</button> 
         </div>
@@ -457,17 +476,6 @@
           </div>
       </div>
       
-      <div class="today">
-        <div class="today-card">
-          <h3>Heute</h3>
-          <ul id="todayAppointments" class="muted"></ul>
-        </div>
-        <div class="today-card">
-          <h3>Schnellinfo</h3>
-          <div class="small muted" id="quickInfo">Keine Termine</div>
-        </div>
-      </div>
-
       <div class="table-wrap" role="region" aria-label="Termin-Karten">
         <div class="appointments-grid" id="appointmentList">
           </div>
@@ -583,7 +591,6 @@
     const statToday = document.getElementById('statToday');
     const statTransferTotal = document.getElementById('statTransferTotal'); 
     const statTransferToday = document.getElementById('statTransferToday'); 
-    const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
     const newTransferModal = document.getElementById('newTransferModal');
@@ -592,14 +599,14 @@
     const currentDateElement = document.getElementById('currentDate');
     const currentTimeElement = document.getElementById('currentTime');
     const pinInput = document.getElementById('pin'); 
-    const notesModal = document.getElementById('notesModal'); // NEW
-    const notesForm = document.getElementById('notesForm');   // NEW
-    const teamNotesDisplay = document.getElementById('teamNotesDisplay'); // NEW
+    const notesModal = document.getElementById('notesModal');
+    const notesForm = document.getElementById('notesForm');
+    const teamNotesDisplay = document.getElementById('teamNotesDisplay');
 
 
     let appointments = [];
     let transfers = []; 
-    let teamNotes = ''; // NEW: Variable to hold team notes
+    let teamNotes = ''; 
 
     function escapeHtml(s){ if (s===undefined||s===null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
     function todayISO(){ return new Date().toISOString().split('T')[0]; }
@@ -620,22 +627,22 @@
 
     function openApp(){
       loginScreen.style.display = 'none';
-      mainAppWrap.style.display = 'flex'; // Show the main app content
+      mainAppWrap.style.display = 'flex';
       appArea.setAttribute('aria-hidden','false');
       loadAppointments();
       loadTransfers(); 
-      loadNotes(); // NEW: Load notes on startup
+      loadNotes(); 
       renderAppointments();
       renderTransfers();
-      renderNotes(); // NEW: Render notes
+      renderNotes(); 
       updateDateTime();
       setInterval(updateDateTime, 1000);
     }
 
     function logout(){
       appArea.setAttribute('aria-hidden','true');
-      mainAppWrap.style.display = 'none'; // Hide the main app content
-      loginScreen.style.display = 'flex'; // Show the login screen
+      mainAppWrap.style.display = 'none';
+      loginScreen.style.display = 'flex';
       const pinInput = document.getElementById('pin');
       if (pinInput) pinInput.value = ''; 
       loginError.textContent = '';
@@ -655,7 +662,6 @@
     }
     function saveTransfers(){ localStorage.setItem('transfers', JSON.stringify(transfers)) }
     
-    // NEW: Notes Storage
     function loadNotes(){ teamNotes = localStorage.getItem('teamNotes') || '' }
     function saveNotes(){ localStorage.setItem('teamNotes', teamNotes) }
 
@@ -709,7 +715,6 @@
 
         statTotal.textContent = appointments.length;
         statToday.textContent = todayCount;
-        quickInfo.textContent = appointments.length ? `${appointments.length} Termine insgesamt` : 'Keine Termine vorhanden';
         
         if (!appointments.length) {
             const emptyMessage = document.createElement('div');
@@ -718,7 +723,15 @@
             emptyMessage.style.color = 'var(--muted)';
             emptyMessage.textContent = 'Keine Termine vorhanden';
             appointmentList.appendChild(emptyMessage);
+            
+            if (todayAppointments.children.length === 0) {
+                 todayAppointments.innerHTML = `<li style="list-style: none; margin-left: -16px;">Keine Termine für heute</li>`;
+            }
         }
+         if (todayAppointments.children.length === 0 && appointments.length > 0) {
+            todayAppointments.innerHTML = `<li style="list-style: none; margin-left: -16px;">Keine Termine für heute</li>`;
+        }
+
     }
     
     // --- Rendering Transfers as Cards ---
@@ -740,7 +753,7 @@
             const card = document.createElement('div');
             card.className = 'transfer-card';
             if (t.date === today) {
-                card.classList.add('today-transfer'); // Apply light red background
+                card.classList.add('today-transfer'); 
             }
 
             const bewohnerCount = t.bewohner ? t.bewohner.length : 0; 
@@ -774,7 +787,7 @@
         });
     }
 
-    // NEW: Rendering Team Notes
+    // Rendering Team Notes (Updated with buttons and smaller title)
     function renderNotes(){
         teamNotesDisplay.innerHTML = '';
         if (teamNotes.trim() === '') {
@@ -785,10 +798,24 @@
         const card = document.createElement('div');
         card.className = 'note-card';
         card.innerHTML = `
-            <h4>Wichtige Teamanweisungen (Zuletzt gespeichert: ${new Date().toLocaleTimeString('de-DE')})</h4>
+            <h4>Wichtige Teamanweisungen</h4>
+            <div style="font-size:13px; color:var(--muted); margin-bottom: 8px;">Zuletzt gespeichert: ${new Date().toLocaleTimeString('de-DE')}</div>
             <p>${escapeHtml(teamNotes)}</p>
+            <div class="note-actions">
+                <button class="edit btn" onclick="openNotesModal()">Bearbeiten</button>
+                <button class="del btn" onclick="deleteNotes()">Löschen</button>
+            </div>
         `;
         teamNotesDisplay.appendChild(card);
+    }
+    
+    // NEW: deleteNotes function
+    function deleteNotes() {
+        if (!confirm('Sind Sie sicher, dass Sie die Team-Notizen löschen möchten?')) return;
+        teamNotes = '';
+        saveNotes();
+        renderNotes();
+        alert('Team-Notizen erfolgreich gelöscht.');
     }
     
     // Function to update the date and time display
@@ -987,7 +1014,7 @@
         closeNewTransferModal();
     });
 
-    // NEW: Notes Modal Functions
+    // Notes Modal Functions
     function openNotesModal(){
         document.getElementById('teamNotes').value = teamNotes;
         notesModal.style.display = 'block';
@@ -1029,7 +1056,7 @@
     window.addEventListener('load', () => {
       loadAppointments();
       loadTransfers(); 
-      loadNotes(); // Load notes
+      loadNotes(); 
       
       loginScreen.style.display = 'flex';
       mainAppWrap.style.display = 'none';
@@ -1040,7 +1067,7 @@
     window.addEventListener('click', e => {
       if (e.target === modal) closeModal();
       if (e.target === newTransferModal) closeNewTransferModal();
-      if (e.target === notesModal) closeNotesModal(); // NEW
+      if (e.target === notesModal) closeNotesModal(); 
     });
   </script>
 </body>
