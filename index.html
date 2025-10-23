@@ -26,7 +26,7 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
-    /* UPDATED: Full white background, no gradients, no padding on body */
+    /* UPDATED: Removed vertical centering for the body, allowing content to start from the top */
     body{
       font-family:var(--mono);
       margin:0;
@@ -36,7 +36,7 @@
       -moz-osx-font-smoothing:grayscale;
       display:flex;
       justify-content:center;
-      align-items: center; /* Center content vertically and horizontally for login screen */
+      /* REMOVED: align-items: center; */
     }
 
     .wrap{
