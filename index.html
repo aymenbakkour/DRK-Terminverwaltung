@@ -169,12 +169,19 @@
 
     /* login panel */
     #loginScreen{
-      width:420px;border-radius:16px;padding:20px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:var(--shadow);
+      /* تعديل العرض ليكون أصغر قليلاً وأكثر ملائمة للموبايل */
+      width:320px; 
+      max-width: 90%; /* إضافة لتكون متناسبة مع شاشات الموبايل الأصغر */
+      border-radius:16px;padding:20px;background:linear-gradient(180deg,#fff,#fbfbff);box-shadow:var(--shadow);
       border:1px solid rgba(15,23,42,0.04);
     }
     #loginScreen h2{margin:0 0 8px 0}
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
-    #loginScreen input{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06)}
+    #loginScreen input{
+      width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);
+      /* تحسين حجم الخط قليلاً ليسهل على الموبايل */
+      font-size: 16px;
+    }
 
     .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
 
@@ -198,7 +205,7 @@
       td:before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
       td.actions{display:flex;gap:8px}
       .modal{width:94%}
-      #loginScreen{width:100%;border-radius:10px}
+      #loginScreen{width:90%;border-radius:10px} /* تعديل العرض على الشاشات الأصغر */
     }
 
     /* focus */
@@ -325,7 +332,7 @@
     </div>
 
     <label for="pin">PIN eingeben</label>
-    <input id="pin" type="password" maxlength="4" required>
+    <input id="pin" type="tel" inputmode="numeric" pattern="\d{4}" maxlength="4" required>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
       <div class="small muted"></div>
@@ -369,6 +376,12 @@
     // منطق التحقق من PIN فقط
     function checkLogin(){
       const pin = document.getElementById('pin').value.trim();
+      // إضافة تحقق من أن الكود هو 4 أرقام
+      if (pin.length !== 4) {
+         loginError.textContent = 'Bitte geben Sie 4 Ziffern ein.';
+         return;
+      }
+
       if (pin === VALID_PIN){
         loginError.textContent = '';
         openApp();
