@@ -212,7 +212,7 @@
     .edit { background:linear-gradient(90deg,#06b6d4,#0ea5e9); color:#fff }
     .del { background:linear-gradient(90deg,#f97316,#ef4444); color:#fff }
 
-    /* TRANSFER CARDS (Sidebar) - UPDATED COLOR */
+    /* TRANSFER CARDS (Sidebar) */
     .transfer-cards-container {
         display: flex;
         flex-direction: column;
@@ -270,7 +270,17 @@
     .modal .head{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:14px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
     .modal .body{padding:16px}
     .modal label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
-    .modal input, .modal textarea{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);font-size:14px}
+    
+    /* FIX: Prevents mobile zoom on input focus by setting font-size to 16px or more */
+    .modal input, .modal textarea{
+        width:100%;
+        padding:10px;
+        margin-top:6px;
+        border-radius:10px;
+        border:1px solid rgba(15,23,42,0.06);
+        font-size:16px; /* CHANGED from 14px to 16px */
+    }
+
     .modal .foot{padding:12px;text-align:right;border-top:1px solid rgba(15,23,42,0.03)}
     .modal button{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
 
@@ -302,7 +312,15 @@
 
     #loginScreen h2{margin:0 0 8px 0}
     #loginScreen label{display:block;margin-top:10px;color:var(--muted)}
-    #loginScreen input{width:100%;padding:10px;margin-top:6px;border-radius:10px;border:1px solid rgba(15,23,42,0.06)}
+    /* FIX: Prevents mobile zoom on input focus by setting font-size to 16px or more */
+    #loginScreen input{
+        width:100%;
+        padding:10px;
+        margin-top:6px;
+        border-radius:10px;
+        border:1px solid rgba(15,23,42,0.06);
+        font-size:16px; /* ADDED/CHANGED to 16px */
+    }
 
     .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
 
@@ -513,7 +531,6 @@
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
-    // Removed: transferModal, transferForm
     const newTransferModal = document.getElementById('newTransferModal');
     const newTransferForm = document.getElementById('newTransferForm');
     const transferList = document.getElementById('transferList'); // Now the transfer card container
@@ -619,7 +636,7 @@
                     <button class="edit btn" onclick="openModal(${i})">Bearbeiten</button>
                     <button class="del btn" onclick="deleteAppointment(${i})">Löschen</button>
                 </div>
-            `; // REMOVED Transfer button
+            `; 
             appointmentList.appendChild(card);
 
             // --- 2. Create Today's List Item ---
