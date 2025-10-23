@@ -36,7 +36,6 @@
       -moz-osx-font-smoothing:grayscale;
       display:flex;
       justify-content:center;
-      /* REMOVED: align-items: center; */
     }
 
     .wrap{
@@ -57,6 +56,27 @@
       box-shadow:var(--shadow);
       border:1px solid rgba(15,23,42,0.04);
       backdrop-filter: blur(6px) saturate(120%);
+    }
+    
+    /* Card style for elements moved to the main panel */
+    .card{
+      background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);
+      border:1px solid rgba(15,23,42,0.04)
+    }
+    .card h4{margin:0 0 8px 0;font-size:15px}
+    .stat{display:flex;align-items:center;gap:12px}
+    .stat .num{font-weight:700;font-size:20px;color:#07142a}
+    .small{font-size:13px;color:var(--muted)}
+    
+    /* Datetime Card styling (used now in the main panel) */
+    .card .stat.datetime{
+        flex-direction:column; 
+        align-items:flex-start; 
+        gap:4px;
+        padding: 0;
+    }
+    .card .stat.datetime .num {
+        font-size: 18px; 
     }
 
     header.app-header{
@@ -142,7 +162,7 @@
     .today .today-card h3{margin:0;font-size:13px;color:var(--accent-2)}
     .today ul{margin:8px 0 0 16px;color:var(--muted);padding:0}
 
-    /* CARD-BASED LAYOUT FOR APPOINTMENTS (replacing table) */
+    /* CARD-BASED LAYOUT FOR APPOINTMENTS/TRANSFERS */
     .table-wrap{
       border-radius:var(--radius);
       overflow:visible;
@@ -156,7 +176,7 @@
       gap: 16px;
       margin-top: 16px;
     }
-    .appointment-card {
+    .appointment-card, .transfer-card {
       background: var(--card);
       border-radius: var(--radius);
       padding: 18px;
@@ -164,7 +184,7 @@
       border: 1px solid rgba(15,23,42,0.04);
       transition: all 0.3s ease;
     }
-    .appointment-card:hover {
+    .appointment-card:hover, .transfer-card:hover {
         box-shadow: 0 10px 30px rgba(18,38,63,0.1);
     }
 
@@ -176,7 +196,7 @@
       padding-bottom: 8px;
       margin-bottom: 8px;
     }
-    .card-name {
+    .card-name, .bewohner-info {
       font-size: 18px;
       font-weight: 700;
       color: var(--accent);
@@ -212,52 +232,27 @@
     .edit { background:linear-gradient(90deg,#06b6d4,#0ea5e9); color:#fff }
     .del { background:linear-gradient(90deg,#f97316,#ef4444); color:#fff }
 
-    /* TRANSFER CARDS (Sidebar) */
-    .transfer-cards-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+    /* TRANSFER CARDS Specific Style */
     .transfer-card {
-        padding: 10px;
-        border-radius: 8px;
-        /* Custom color for clear distinction */
-        background: #e0f7f4; /* Light mint/teal background */
-        border-left: 4px solid #00a896; /* Darker teal border */
-        font-size: 13px;
+        border-left: 4px solid #00a896;
+    }
+    /* NEW: Light Red Style for Today's Transfer */
+    .transfer-card.today-transfer { 
+        background: #fee2e2; /* Light Red */
+        border: 1px solid var(--accent); /* Darker Red Border */
+        border-left: 4px solid var(--accent);
     }
     .transfer-card .bewohner-info {
-        font-weight: 700;
-        color: #07142a;
-        margin-bottom: 2px;
-    }
-    .transfer-card .datetime-info {
-        color: var(--muted);
+        color: #07142a; /* Default color for title */
     }
 
-    /* right column */
+
+    /* right column (now only contains the small decorative card) */
     .side{
       width:320px;flex:0 0 320px;position:sticky;top:28px;
       display:flex;flex-direction:column;gap:var(--gap);
     }
-    .card{
-      background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);
-      border:1px solid rgba(15,23,42,0.04)
-    }
-    .card h4{margin:0 0 8px 0;font-size:15px}
-    .stat{display:flex;align-items:center;gap:12px}
-    .stat .num{font-weight:700;font-size:20px;color:#07142a}
-    .small{font-size:13px;color:var(--muted)}
-
-    /* Card for Current Date and Time */
-    .card .stat.datetime{
-        flex-direction:column; 
-        align-items:flex-start; 
-        gap:4px;
-    }
-    .card .stat.datetime .num {
-        font-size: 18px; 
-    }
+    .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
 
     footer.copy{font-size:13px;color:var(--muted);text-align:center;padding:12px 0}
 
@@ -266,6 +261,8 @@
       display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
       background:linear-gradient(180deg,#fff,#fafbff);padding:0;border-radius:14px;z-index:1200;width:520px;
       box-shadow: 0 30px 80px rgba(6,12,34,0.22);
+      max-height: 90vh; /* Added max height */
+      overflow-y: auto; /* Added overflow for long forms */
     }
     .modal .head{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:14px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
     .modal .body{padding:16px}
@@ -322,12 +319,10 @@
         font-size:16px; /* ADDED/CHANGED to 16px */
     }
 
-    .centered{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:10px}
-
     /* responsive adjustments */
     @media (max-width:1024px){
       .wrap{flex-direction:column;padding:18px}
-      .side{width:100%;flex:0 0 auto;position:static}
+      .side{width:100%;flex:0 0 auto;position:static; order: 1; margin-top: 16px;} /* Moved sidebar (now small) to bottom */
       .panel{order:0}
       .appointments-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -335,10 +330,11 @@
     }
 
     @media (max-width:560px){
-      /* FIX 2: Modal responsiveness for mobile */
+      /* FIX: Modal responsiveness for mobile */
       .modal {
         width: calc(100% - 36px); 
         top: 20px; 
+        left: 50%;
         transform: translate(-50%, 0); /* Only translate X, pin to top */
         max-height: calc(100vh - 40px); /* Limit height */
         overflow-y: auto; /* Enable scrolling for long forms */
@@ -349,7 +345,6 @@
       header.app-header{gap:10px}
       .logo{width:52px;height:52px;font-size:16px}
       
-      /* FIX 1: Show sidebar content (transfers) below main panel on mobile */
       .side{display:flex; order: 1;} 
       
       /* Card-based layout is responsive by default, but we should simplify the login card */
@@ -395,6 +390,23 @@
           <p>Übersicht, Verwaltung und sichere Anzeige Ihrer Termine</p>
         </div>
       </header>
+      
+      <div class="card" id="datetimeCard" style="margin-bottom: var(--gap);">
+        <div class="stat datetime">
+          <div class="num" id="currentDate">Datum wird geladen...</div>
+          <div class="small muted" id="currentTime">Uhrzeit wird geladen...</div>
+        </div>
+      </div>
+      
+      <div class="card" id="statsCard" style="margin-bottom: var(--gap);">
+        <h4>Statistiken</h4>
+        <div class="stat" style="justify-content:space-between">
+          <div><div class="num" id="statTotal">0</div><div class="small muted">Gesamt Termine</div></div>
+          <div><div class="num" id="statToday">0</div><div class="small muted">Termine Heute</div></div>
+          <div><div class="num" id="statTransferTotal">0</div><div class="small muted">Gesamt Transfers</div></div>
+          <div><div class="num" id="statTransferToday">0</div><div class="small muted">Transfers Heute</div></div>
+        </div>
+      </div>
 
       <div class="controls">
         <div style="display:flex;gap:8px;align-items:center">
@@ -407,6 +419,12 @@
         </div>
       </div>
 
+      <div class="table-wrap" role="region" aria-label="Transfer-Karten" style="margin-bottom: 20px;">
+        <h4 style="margin-bottom: 8px;">Bewohner-Transfers (Kartenansicht)</h4>
+        <div class="appointments-grid" id="transferListGrid">
+          </div>
+      </div>
+      
       <div class="today">
         <div class="today-card">
           <h3>Heute</h3>
@@ -427,32 +445,6 @@
     </div>
 
     <aside class="side" aria-hidden="true">
-      <div class="card">
-        <h4>Statistiken</h4>
-        <div class="stat" style="justify-content:space-between">
-          <div><div class="num" id="statTotal">0</div><div class="small muted">Gesamt</div></div>
-          <div><div class="num" id="statToday">0</div><div class="small muted">Heute</div></div>
-        </div>
-      </div>
-      
-      <div class="card">
-        <h4>Aktuelles Datum & Uhrzeit</h4>
-        <div class="stat datetime">
-          <div class="num" id="currentDate">Datum wird geladen...</div>
-          <div class="small muted" id="currentTime">Uhrzeit wird geladen...</div>
-        </div>
-      </div>
-      
-      <div class="card">
-          <h4>Letzte Transfers</h4>
-          <div id="latestTransfers">
-              <div id="transferList" class="transfer-cards-container">
-                  <div class="small muted" style="padding: 10px 0;">Keine Transfers gespeichert.</div>
-              </div>
-          </div>
-      </div>
-
-
       <div class="card centered" aria-hidden="false">
         <div style="font-size:36px;font-weight:800;color:var(--accent)">❤️</div>
         <div class="small muted">Eine freundliche, übersichtliche Oberfläche für Ihre Terminverwaltung.</div>
@@ -501,8 +493,7 @@
     </div>
     <div class="body">
       <form id="newTransferForm">
-
-        <label>Datum und Uhrzeit</label>
+        <input type="hidden" id="editTransferIndex"> <label>Datum und Uhrzeit</label>
         <div style="display:flex; gap:10px;">
             <input id="newTransferDate" type="date" required style="flex:1">
             <input id="newTransferTime" type="time" required style="flex:1">
@@ -521,7 +512,7 @@
         
         <div class="foot">
           <button type="button" onclick="closeNewTransferModal()" class="btn btn-ghost">Abbrechen</button>
-          <button type="submit" class="btn btn-primary transfer-btn">Transfer speichern</button>
+          <button type="submit" class="btn btn-primary transfer-btn">Speichern</button>
         </div>
       </form>
     </div>
@@ -536,16 +527,18 @@
     const loginError = document.getElementById('loginError');
     const appArea = document.getElementById('appArea');
     const mainAppWrap = document.getElementById('mainAppWrap'); 
-    const appointmentList = document.getElementById('appointmentList'); // Now the grid container
+    const appointmentList = document.getElementById('appointmentList'); 
+    const transferListGrid = document.getElementById('transferListGrid'); // New
     const todayAppointments = document.getElementById('todayAppointments');
     const statTotal = document.getElementById('statTotal');
     const statToday = document.getElementById('statToday');
+    const statTransferTotal = document.getElementById('statTransferTotal'); // New
+    const statTransferToday = document.getElementById('statTransferToday'); // New
     const quickInfo = document.getElementById('quickInfo');
     const modal = document.getElementById('appointmentModal');
     const form = document.getElementById('appointmentForm');
     const newTransferModal = document.getElementById('newTransferModal');
     const newTransferForm = document.getElementById('newTransferForm');
-    const transferList = document.getElementById('transferList'); // Now the transfer card container
     const newBewohnerListContainer = document.getElementById('newBewohnerListContainer'); 
     const currentDateElement = document.getElementById('currentDate');
     const currentTimeElement = document.getElementById('currentTime');
@@ -677,29 +670,55 @@
     
     // --- Rendering Transfers as Cards ---
     function renderTransfers(){
-        transferList.innerHTML = ''; // This is the transfer-cards-container
+        const today = todayISO();
+        const todayTransfersCount = transfers.filter(t => t.date === today).length;
+        
+        transferListGrid.innerHTML = ''; 
+        
+        // Update total stat
+        if (statTransferTotal) statTransferTotal.textContent = transfers.length; 
+        if (statTransferToday) statTransferToday.textContent = todayTransfersCount; 
+
         if (transfers.length === 0) {
-            transferList.innerHTML = `<div class="small muted" style="padding: 10px 0;">Keine Transfers gespeichert.</div>`;
+            transferListGrid.innerHTML = `<div class="small muted" style="padding: 18px; text-align: center;">Keine Transfers gespeichert.</div>`;
             return;
         }
 
-        // Display up to 5 latest transfers
-        transfers.slice(-5).reverse().forEach(t => {
+        transfers.forEach((t, i) => {
             const card = document.createElement('div');
             card.className = 'transfer-card';
+            if (t.date === today) {
+                card.classList.add('today-transfer'); // Apply light red background
+            }
+
             const bewohnerCount = t.bewohner ? t.bewohner.length : 0; 
-            const dateStr = t.date === todayISO() ? 'Heute' : t.date;
+            const dateStr = t.date === today ? 'Heute' : escapeHtml(t.date);
             
-            const bewohnerInfo = bewohnerCount > 1 
-                ? `${bewohnerCount} Bewohner` 
-                : (bewohnerCount === 1 ? `${t.bewohner[0].name} (${t.bewohner[0].room})` : 'Unbekannter Bewohner');
+            const bewohnerNames = t.bewohner.map(b => `${escapeHtml(b.name)} (${escapeHtml(b.room)})`).join(', ');
             
             card.innerHTML = `
-                <div class="bewohner-info">${bewohnerInfo}</div>
-                <div class="datetime-info">${dateStr}, ${escapeHtml(t.time)}</div>
-                <div class="small muted" style="margin-top: 4px; border-top: 1px dashed rgba(15,23,42,0.05); padding-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.notes.substring(0, 50)}</div>
+                <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                    <h4 class="bewohner-info">${bewohnerCount} Bewohner Transfer</h4>
+                    <span class="card-room" style="background: rgba(185,28,28,0.1); color: var(--accent);">${dateStr}</span>
+                </div>
+                <div class="card-detail" style="flex-direction: column; margin-bottom: 12px;">
+                    <span class="card-label" style="min-width: auto; margin-bottom: 4px; font-size: 13px;">Bewohner:</span>
+                    <span style="font-size: 14px;">${bewohnerNames}</span>
+                </div>
+                <div class="card-detail">
+                    <span class="card-label">Uhrzeit:</span>
+                    <span>${escapeHtml(t.time)}</span>
+                </div>
+                <div class="card-detail" style="margin-bottom: 0;">
+                    <span class="card-label">Notiz:</span>
+                    <span class="muted" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${t.notes}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="edit btn" onclick="editTransfer(${i})">Bearbeiten</button>
+                    <button class="del btn" onclick="deleteTransfer(${i})">Löschen</button>
+                </div>
             `;
-            transferList.appendChild(card);
+            transferListGrid.appendChild(card);
         });
     }
 
@@ -825,11 +844,47 @@
         document.getElementById('newTransferDate').value = todayISO();
         newBewohnerListContainer.innerHTML = ''; 
         addBewohnerField('newBewohnerListContainer'); 
+        document.getElementById('newTransferModalTitle').textContent = 'Neuer Bewohnertransfer eintragen';
+        
+        let editIndexInput = document.getElementById('editTransferIndex');
+        if (editIndexInput) editIndexInput.value = ''; // Clear index for new entry
+        
         newTransferModal.style.display = 'block';
         document.getElementById('newTransferDate').focus();
     }
 
-    function closeNewTransferModal(){ newTransferModal.style.display = 'none' }
+    function closeNewTransferModal(){ 
+        newTransferModal.style.display = 'none';
+        // Clear edit index when closing
+        let editIndexInput = document.getElementById('editTransferIndex');
+        if (editIndexInput) editIndexInput.value = '';
+    }
+
+    function deleteTransfer(i){
+      if (!confirm('Diesen Transfer wirklich löschen?')) return;
+      transfers.splice(i,1);
+      saveTransfers();
+      renderTransfers();
+    }
+    
+    function editTransfer(i){
+        const t = transfers[i];
+        
+        document.getElementById('newTransferDate').value = t.date || todayISO();
+        document.getElementById('newTransferTime').value = t.time || '08:00';
+        document.getElementById('newTransferNotes').value = t.notes || '';
+        document.getElementById('newTransferModalTitle').textContent = 'Transfer bearbeiten';
+        
+        newBewohnerListContainer.innerHTML = '';
+        t.bewohner.forEach(b => {
+            addBewohnerField('newBewohnerListContainer', b.name, b.room);
+        });
+        
+        document.getElementById('editTransferIndex').value = i;
+        
+        newTransferModal.style.display = 'block';
+        document.getElementById('newTransferDate').focus();
+    }
 
     newTransferForm.addEventListener('submit', e => {
         e.preventDefault();
@@ -849,11 +904,20 @@
             bewohner: bewohner 
         };
         
-        transfers.push(t); 
+        const editIndex = document.getElementById('editTransferIndex').value;
+
+        if (editIndex !== '') {
+            // Edit existing transfer
+            transfers[parseInt(editIndex)] = t;
+            alert(`Transfer erfolgreich aktualisiert!`); 
+        } else {
+            // Add new transfer
+            transfers.push(t); 
+            alert(`Neuer Transfer für ${bewohner.length} Bewohner erfolgreich gespeichert!`); 
+        }
+        
         saveTransfers();
         renderTransfers();
-
-        alert(`Neuer Transfer für ${bewohner.length} Bewohner erfolgreich gespeichert!`); 
         closeNewTransferModal();
     });
 
